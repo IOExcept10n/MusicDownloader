@@ -1,9 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="SUSUProgramming.MusicDownloader.App"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+			 <!-- For now, light theme is not implemented, and, as I've seen in sandbox, it looks terrible.-->
     <Application.Styles>
         <FluentTheme />
 		<Style Selector="TextBlock.icons">
