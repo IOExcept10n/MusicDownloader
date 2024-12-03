@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
+    One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+	<Title>Music Downloader</Title>
+	<Authors>IOExcept10n</Authors>
+	<Company>MIDIFrogs Team</Company>
+	<Product>Music Downloader</Product>
+	<Description>An Avalonia program that can download and tag music files</Description>
+	<Copyright>Copyright © IOExcept10n, 2024</Copyright>
+	<PackageTags>avalonia;dotnet;vk;music;audio;tags;id3</PackageTags>
+	<AssemblyVersion>1.0.2</AssemblyVersion>
+	<FileVersion>1.0.2</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SUSUProgramming.MusicDownloader\SUSUProgramming.MusicDownloader.csproj" />
+  </ItemGroup>
+</Project>

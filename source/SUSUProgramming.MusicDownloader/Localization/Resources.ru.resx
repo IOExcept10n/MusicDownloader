@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LibraryTracks" xml:space="preserve">
+    <value>Треки в медиатеке</value>
+  </data>
+  <data name="MediaLibrary" xml:space="preserve">
+    <value>Медиатека</value>
+  </data>
+  <data name="OnlineServices" xml:space="preserve">
+    <value>Онлайн-сервисы</value>
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="UnsortedLibraryTracks" xml:space="preserve">
+    <value>Неотсортированные</value>
+  </data>
+  <data name="MyMusic" xml:space="preserve">
+    <value>Моя музыка</value>
+  </data>
+  <data name="OnlineSearch" xml:space="preserve">
+    <value>Онлайн-поиск</value>
+  </data>
+  <data name="Recommendations" xml:space="preserve">
+    <value>Рекомендации</value>
+  </data>
+  <data name="TrackTitle" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="TrackArtist" xml:space="preserve">
+    <value>Исполнитель</value>
+  </data>
+  <data name="TrackAlbum" xml:space="preserve">
+    <value>Альбом</value>
+  </data>
+  <data name="TrackLyrics" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="TrackComment" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
+  <data name="TrackDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="TrackDisc" xml:space="preserve">
+    <value>Диск</value>
+  </data>
+  <data name="TrackDiscCount" xml:space="preserve">
+    <value>Число дисков</value>
+  </data>
+  <data name="TrackGenres" xml:space="preserve">
+    <value>Жанры</value>
+  </data>
+  <data name="TrackNumber" xml:space="preserve">
+    <value>Номер трека</value>
+  </data>
+  <data name="TrackCount" xml:space="preserve">
+    <value>Число треков</value>
+  </data>
+  <data name="TrackYear" xml:space="preserve">
+    <value>Год</value>
+  </data>
+  <data name="AuthConfirmation" xml:space="preserve">
+    <value>Для использования онлайн-сервисов необходимо авторизовать приложение. Вы хотите авторизоваться?</value>
+  </data>
+  <data name="ConfirmAuth" xml:space="preserve">
+    <value>Авторизовать</value>
+  </data>
+  <data name="AuthorizationFailed" xml:space="preserve">
+    <value>Не удалось авторизоваться :(</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Попробовать снова</value>
+  </data>
+  <data name="LoginLabel" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Res2FALabel" xml:space="preserve">
+    <value>Код подтверждения</value>
+  </data>
+  <data name="VKAuthorizationLabel" xml:space="preserve">
+    <value>Пожалуйста, введите учётные данные от VK ID</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="TagsCount" xml:space="preserve">
+    <value>Теги</value>
+  </data>
+  <data name="HandlingState" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="AutoTag" xml:space="preserve">
+    <value>Найти теги</value>
+  </data>
+  <data name="TrackSubtitle" xml:space="preserve">
+    <value>Подпись</value>
+  </data>
+  <data name="TrackAlbumArtist" xml:space="preserve">
+    <value>Исполнитель альбома</value>
+  </data>
+  <data name="TrackCover" xml:space="preserve">
+    <value>Обложка</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="Homepage" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
+  <data name="OpenLibrary" xml:space="preserve">
+    <value>Открыть медиатеку</value>
+  </data>
+  <data name="SearchOnline" xml:space="preserve">
+    <value>Найти музыку онлайн</value>
+  </data>
+  <data name="FoundConflicts" xml:space="preserve">
+    <value>Найдено конфликтов:</value>
+  </data>
+  <data name="ResolveConflicts" xml:space="preserve">
+    <value>Разрешить</value>
+  </data>
+  <data name="StayUnresolved" xml:space="preserve">
+    <value>Оставить без изменений</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="MetadataPreferences" xml:space="preserve">
+    <value>Настройки метаданных</value>
+  </data>
+  <data name="AddPath" xml:space="preserve">
+    <value>Добавить путь</value>
+  </data>
+  <data name="ShouldRewriteMetadata" xml:space="preserve">
+    <value>Перезаписывать метаданные во время автоматической загрузки тегов</value>
+  </data>
+  <data name="ManageTracked" xml:space="preserve">
+    <value>Настроить отслеживаемые пути</value>
+  </data>
+  <data name="ManageBlacklist" xml:space="preserve">
+    <value>Настроить чёрный список путей</value>
+  </data>
+  <data name="PathDialog" xml:space="preserve">
+    <value>Путь:</value>
+  </data>
+  <data name="AddOrEditPath" xml:space="preserve">
+    <value>Добавить/Изменить путь</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value>Путь не существует.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="SelectAllTip" xml:space="preserve">
+    <value>Выбрать все песни</value>
+  </data>
+  <data name="AutoTagTip" xml:space="preserve">
+    <value>Автоматически найти метаданные в онлайн-сервисах, таких как Last.FM, Genius, LrcLib и т.д.</value>
+  </data>
+  <data name="ConflictsTip" xml:space="preserve">
+    <value>Разрешить обнаруженные конфликты</value>
+  </data>
+  <data name="RefreshTip" xml:space="preserve">
+    <value>Обновить представление с треками</value>
+  </data>
+  <data name="SelectPathTip" xml:space="preserve">
+    <value>Выберите путь для перемещения треков.</value>
+  </data>
+  <data name="MoveTip" xml:space="preserve">
+    <value>Переместить выбранные треки по указанному пути</value>
+  </data>
+  <data name="ProgressTip" xml:space="preserve">
+    <value>Прогресс обработки</value>
+  </data>
+  <data name="DeleteTip" xml:space="preserve">
+    <value>Удалить выбранные треки</value>
+  </data>
+  <data name="SearchTip" xml:space="preserve">
+    <value>Найти треки по указанному запросу</value>
+  </data>
+  <data name="InputQuery" xml:space="preserve">
+    <value>Введите ваш запрос</value>
+  </data>
+  <data name="PlayTrack" xml:space="preserve">
+    <value>Воспроизвести трек</value>
+  </data>
+  <data name="ShowInExplorer" xml:space="preserve">
+    <value>Показать трек в Проводнике</value>
+  </data>
+  <data name="DeleteTrack" xml:space="preserve">
+    <value>Удалить трек</value>
+  </data>
+  <data name="MoveTrackTo" xml:space="preserve">
+    <value>Переместить в...</value>
+  </data>
+  <data name="MarkAsUnsorted" xml:space="preserve">
+    <value>Отправить в "Неотсортированное"</value>
+  </data>
+  <data name="DownloadTip" xml:space="preserve">
+    <value>Скачать трек</value>
+  </data>
+  <data name="SwitchIgnore" xml:space="preserve">
+    <value>Игнорировать имя трека</value>
+  </data>
+  <data name="DownloadAndPlay" xml:space="preserve">
+    <value>Скачать и запустить</value>
+  </data>
+  <data name="AutoTagOnDownload" xml:space="preserve">
+    <value>Автоматически искать метаданные при скачивании</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © 2024 IOExcept10n. Если возникли вопросы, пишите в Telegram: t.me/ioexcept10n. Релиз не для коммерческого использования.</value>
+  </data>
+  <data name="GithubReference" xml:space="preserve">
+    <value>Репозиторий проекта: https://github.com/IOExcept10n/MusicDownloader</value>
+  </data>
+</root>

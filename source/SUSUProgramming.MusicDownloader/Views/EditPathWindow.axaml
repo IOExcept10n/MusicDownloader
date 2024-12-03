@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
+        mc:Ignorable="d"
+		Title="{x:Static lang:Resources.AddOrEditPath}"
+		Icon="/Assets/avalonia-logo.ico"
+        Width="300" Height="150"
+        x:Class="SUSUProgramming.MusicDownloader.Views.EditPathWindow">
+	<StackPanel Margin="10">
+		<TextBlock Text="{x:Static lang:Resources.PathDialog}"/>
+		<TextBox Name="PathTextBox" KeyDown="OnKeyDown" TextChanged="OnTextChanged" Margin="0,0,0,10"/>
+		<Grid Height="30">
+			<TextBlock Name="FailNotification"
+				   Text="{x:Static lang:Resources.PathDoesNotExist}"
+				   Foreground="Red"
+				   IsVisible="False"/>
+		</Grid>
+		<Grid ColumnDefinitions="*,*">
+			<Button Content="{x:Static lang:Resources.Cancel}"
+					Click="OnCancelClick"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					Margin="10"/>
+			<Button Content="{x:Static lang:Resources.Save}"
+					Grid.Column="1"
+					Click="OnSaveClick"
+					HorizontalAlignment="Stretch"
+					HorizontalContentAlignment="Center"
+					Margin="10"/>
+		</Grid>
+	</StackPanel>
+</Window>

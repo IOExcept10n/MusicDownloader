@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SUSUProgramming.MusicDownloader.ViewModels"
+			 xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:OnlineLibViewModel"
+             x:Class="SUSUProgramming.MusicDownloader.Views.OnlineServices.SearchView">
+	<Grid RowDefinitions="50,50,*">
+		<Grid ColumnDefinitions="*,50">
+			<TextBox x:Name="SearchBox"
+					 TextChanged="OnSearchTextUpdate"
+					 KeyDown="OnSearchKeyDown"
+					 VerticalAlignment="Center"
+					 Watermark="{x:Static lang:Resources.InputQuery}"
+					 HorizontalAlignment="Stretch"/>
+			<Button Height="35"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Click="OnSearchClick"
+					Grid.Column="1"
+					ToolTip.Tip="{x:Static lang:Resources.SearchTip}"
+					Margin="2">
+				<TextBlock Classes="icons" Text="&#xe721;"/>
+			</Button>
+		</Grid>
+		<Grid ColumnDefinitions="*,*,50" Grid.Row="1">
+			<TextBlock Text="{x:Static lang:Resources.TrackTitle}"
+					   VerticalAlignment="Center"/>
+			<TextBlock Text="{x:Static lang:Resources.TrackArtist}"
+					   Grid.Column="1"
+					   VerticalAlignment="Center"/>
+		</Grid>
+		<ListBox Grid.Row="2"
+				 ItemsSource="{Binding Tracks}"
+				 Name="TracksList"
+				 DoubleTapped="OnDoubleTap">
+			<ListBox.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="{x:Static lang:Resources.DownloadAndPlay}" Click="OnLoadAndPlayClick"/>
+					<MenuItem Header="{x:Static lang:Resources.SwitchIgnore}" Click="OnSwitchIgnoreClick"/>
+				</ContextMenu>
+			</ListBox.ContextMenu>
+			<ListBox.ItemTemplate>
+				<DataTemplate x:DataType="vm:OnlineTrackViewModel">
+					<Grid Height="50" ColumnDefinitions="*,*,50">
+						<TextBlock Grid.Column="0"
+								   VerticalAlignment="Center"
+								   Text="{Binding Title}"/>
+						<TextBlock Grid.Column="1"
+								   VerticalAlignment="Center"
+								   Text="{Binding Artist}"/>
+						<Button Height="35"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Right"
+								IsVisible="{Binding CanDownload}"
+								Grid.Column="2"
+								Background="{Binding SelectionColor}"
+								Margin="2"
+								Click="OnDownloadClick">
+							<TextBlock Classes="icons" Text="&#xe896;"/>
+						</Button>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+</UserControl>

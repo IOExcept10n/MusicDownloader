@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LibraryTracks" xml:space="preserve">
+    <value>Library tracks</value>
+    <comment>Title for library tracks tab header</comment>
+  </data>
+  <data name="MediaLibrary" xml:space="preserve">
+    <value>Media library</value>
+    <comment>Title for media library sidebar item</comment>
+  </data>
+  <data name="OnlineServices" xml:space="preserve">
+    <value>Online services</value>
+    <comment>Title for online services sidebar item</comment>
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferences</value>
+    <comment>Title for preferences sidebar item</comment>
+  </data>
+  <data name="UnsortedLibraryTracks" xml:space="preserve">
+    <value>Unsorted Tracks</value>
+    <comment>Title for unsorted library tracks tab header</comment>
+  </data>
+  <data name="MyMusic" xml:space="preserve">
+    <value>My music</value>
+  </data>
+  <data name="OnlineSearch" xml:space="preserve">
+    <value>Online search</value>
+  </data>
+  <data name="Recommendations" xml:space="preserve">
+    <value>Recommendations</value>
+  </data>
+  <data name="TrackTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="TrackArtist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="TrackAlbum" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="TrackLyrics" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="TrackComment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="TrackDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="TrackDisc" xml:space="preserve">
+    <value>Disc</value>
+  </data>
+  <data name="TrackDiscCount" xml:space="preserve">
+    <value>Disc count</value>
+  </data>
+  <data name="TrackGenres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="TrackNumber" xml:space="preserve">
+    <value>Track position</value>
+  </data>
+  <data name="TrackCount" xml:space="preserve">
+    <value>Tracks count</value>
+  </data>
+  <data name="TrackYear" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="AuthConfirmation" xml:space="preserve">
+    <value>To use online services, you should authorize an app. Would you like to?</value>
+  </data>
+  <data name="ConfirmAuth" xml:space="preserve">
+    <value>Authorize</value>
+  </data>
+  <data name="AuthorizationFailed" xml:space="preserve">
+    <value>Authorization Failed :(</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="LoginLabel" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="PasswordLabel" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Res2FALabel" xml:space="preserve">
+    <value>Verification Code</value>
+  </data>
+  <data name="VKAuthorizationLabel" xml:space="preserve">
+    <value>Please enter your VK ID credentials</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="TagsCount" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="HandlingState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="AutoTag" xml:space="preserve">
+    <value>Autotag</value>
+  </data>
+  <data name="TrackSubtitle" xml:space="preserve">
+    <value>Subtitle</value>
+  </data>
+  <data name="TrackAlbumArtist" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="TrackCover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="Homepage" xml:space="preserve">
+    <value>Homepage</value>
+  </data>
+  <data name="OpenLibrary" xml:space="preserve">
+    <value>Open local library</value>
+  </data>
+  <data name="SearchOnline" xml:space="preserve">
+    <value>Search tracks online</value>
+  </data>
+  <data name="FoundConflicts" xml:space="preserve">
+    <value>Found conflicts:</value>
+  </data>
+  <data name="ResolveConflicts" xml:space="preserve">
+    <value>Resolve</value>
+  </data>
+  <data name="StayUnresolved" xml:space="preserve">
+    <value>Keep without changes</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="MetadataPreferences" xml:space="preserve">
+    <value>Metadata Preferences</value>
+  </data>
+  <data name="AddPath" xml:space="preserve">
+    <value>Add path</value>
+  </data>
+  <data name="ShouldRewriteMetadata" xml:space="preserve">
+    <value>Rewrite metadata on auto tagging</value>
+  </data>
+  <data name="ManageTracked" xml:space="preserve">
+    <value>Manage tracked paths</value>
+  </data>
+  <data name="ManageBlacklist" xml:space="preserve">
+    <value>Manage blacklisted paths</value>
+  </data>
+  <data name="PathDialog" xml:space="preserve">
+    <value>Path:</value>
+  </data>
+  <data name="AddOrEditPath" xml:space="preserve">
+    <value>Add/Edit path</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value>Path does not exist.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SelectAllTip" xml:space="preserve">
+    <value>Select all tracks</value>
+  </data>
+  <data name="AutoTagTip" xml:space="preserve">
+    <value>Automatically search metadata online in services such as Last.FM, Genius, LrcLib etc.</value>
+  </data>
+  <data name="ConflictsTip" xml:space="preserve">
+    <value>Resolve conflicts detected when tagging</value>
+  </data>
+  <data name="RefreshTip" xml:space="preserve">
+    <value>Refresh tracks view</value>
+  </data>
+  <data name="SelectPathTip" xml:space="preserve">
+    <value>Select path to move tracks to.</value>
+  </data>
+  <data name="MoveTip" xml:space="preserve">
+    <value>Move tracks into the selected path</value>
+  </data>
+  <data name="ProgressTip" xml:space="preserve">
+    <value>Tagging progress</value>
+  </data>
+  <data name="DeleteTip" xml:space="preserve">
+    <value>Delete selected tracks</value>
+  </data>
+  <data name="SearchTip" xml:space="preserve">
+    <value>Search tracks with given query</value>
+  </data>
+  <data name="InputQuery" xml:space="preserve">
+    <value>Input your query</value>
+  </data>
+  <data name="PlayTrack" xml:space="preserve">
+    <value>Play track with default player</value>
+  </data>
+  <data name="ShowInExplorer" xml:space="preserve">
+    <value>Show track in explorer</value>
+  </data>
+  <data name="DeleteTrack" xml:space="preserve">
+    <value>Delete track</value>
+  </data>
+  <data name="MoveTrackTo" xml:space="preserve">
+    <value>Move to...</value>
+  </data>
+  <data name="MarkAsUnsorted" xml:space="preserve">
+    <value>Mark track as unsorted</value>
+  </data>
+  <data name="DownloadTip" xml:space="preserve">
+    <value>Download track</value>
+  </data>
+  <data name="SwitchIgnore" xml:space="preserve">
+    <value>Ignore track name</value>
+  </data>
+  <data name="DownloadAndPlay" xml:space="preserve">
+    <value>Download and play</value>
+  </data>
+  <data name="AutoTagOnDownload" xml:space="preserve">
+    <value>Auto tag on download</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © 2024 IOExcept10n. For contacts write via Telegram: t.me/ioexcept10n. This release is not for sale.</value>
+  </data>
+  <data name="GithubReference" xml:space="preserve">
+    <value>Project repo: https://github.com/IOExcept10n/MusicDownloader</value>
+  </data>
+</root>

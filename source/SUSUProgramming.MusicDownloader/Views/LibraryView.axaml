@@ -1,0 +1,336 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
+			 xmlns:view="clr-namespace:SUSUProgramming.MusicDownloader.Views.Library"
+			 xmlns:vm="clr-namespace:SUSUProgramming.MusicDownloader.ViewModels"
+			 xmlns:cc="clr-namespace:SUSUProgramming.MusicDownloader.Controls"
+			 xmlns:beh="clr-namespace:SUSUProgramming.MusicDownloader.Behaviors"
+			 mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
+			 x:DataType="vm:LibraryViewModel"
+             x:Class="SUSUProgramming.MusicDownloader.Views.LibraryView">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="4*" MinWidth="600"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*" MinWidth="300" MaxWidth="500"/>
+		</Grid.ColumnDefinitions>
+		<TabControl SelectionChanged="OnTabChanged">
+			<TabItem Header="{x:Static lang:Resources.UnsortedLibraryTracks}">
+				<view:UnsortedTracksView/>
+			</TabItem>
+			<TabItem Header="{x:Static lang:Resources.MyMusic}">
+				<view:MyTracksView/>
+			</TabItem>
+		</TabControl>
+		<GridSplitter Width="3" Grid.Column="1"/>
+		<Grid Grid.Column="2"
+			  DataContext="{Binding EditingModel}"
+			  x:DataType="vm:MultiTrackViewModel"
+			  RowDefinitions="2*,Auto,30,*,50">
+			<ScrollViewer HorizontalScrollBarVisibility="Disabled">
+				<Border Padding="5">
+						<StackPanel Orientation="Vertical" Spacing="5">
+						<!--Title-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Grid.Column="0"
+								   Text="{x:Static lang:Resources.TrackTitle}"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Right"
+								   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonTitle}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Artist-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackArtist}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonPerformersString}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Album-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackAlbum}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonAlbum}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Album Artists-->
+						<Grid ColumnDefinitions="165,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackAlbumArtist}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonAlbumArtistsString}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Genres-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackGenres}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="4"/>
+							<AutoCompleteBox Grid.Column="1"
+											 Margin="3"
+											 ItemsSource="{Binding $parent[UserControl].DataContext.Settings.GenresList}"
+											 HorizontalAlignment="Stretch">
+								<Interaction.Behaviors>
+									<beh:LostFocusUpdateBindingBehavior Text="{Binding CommonGenresString}"/>
+								</Interaction.Behaviors>
+							</AutoCompleteBox>
+						</Grid>
+						<!--Year-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackYear}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="4"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonYear}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Track-->
+						<Grid ColumnDefinitions="100,*,30,*">
+							<TextBlock Grid.Column="0"
+									   Text="{x:Static lang:Resources.TrackNumber}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="4"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonTrack}"
+									 MinWidth="40"
+									 HorizontalAlignment="Stretch"/>
+							<TextBlock Grid.Column="2" Margin="4 2" VerticalAlignment="Center" HorizontalAlignment="Center" Text="/"/>
+							<TextBox Grid.Column="3"
+									 Margin="3"
+									 MinWidth="40"
+									 Text="{Binding CommonTrackCount}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Disk-->
+						<Grid ColumnDefinitions="100,*,30,*">
+							<TextBlock Grid.Column="0"
+									   Text="{x:Static lang:Resources.TrackDisc}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="4"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonDisc}"
+									 MinWidth="40"
+									 HorizontalAlignment="Stretch"/>
+							<TextBlock Grid.Column="2" Margin="4 2" VerticalAlignment="Center" HorizontalAlignment="Center" Text="/"/>
+							<TextBox Grid.Column="3"
+									 Margin="3"
+									 Text="{Binding CommonDiscCount}"
+									 MinWidth="40"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Lyrics-->
+						<Grid ColumnDefinitions="125,*" RowDefinitions="40,160">
+							<TextBlock Text="{x:Static lang:Resources.TrackLyrics}"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Center"
+										Margin="2"/>
+							<Button Grid.Column="1"
+									HorizontalAlignment="Stretch"
+									HorizontalContentAlignment="Center"
+									Margin="10 2"
+									Content="{x:Static lang:Resources.Load}"
+									Click="OnLoadClick"/>
+							<TextBox Grid.ColumnSpan="2"
+									 Grid.Row="1"
+									 Grid.RowSpan="2"
+									 Margin="3"
+									 Text="{Binding CommonLyrics}"
+									 AcceptsReturn="True"
+									 TextWrapping="Wrap"
+									 ScrollViewer.VerticalScrollBarVisibility="Auto"
+									 HorizontalAlignment="Stretch"
+									 VerticalAlignment="Stretch"/>
+						</Grid>
+						<!--Subtitle-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackSubtitle}"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Margin="3"
+									 Text="{Binding CommonSubtitle}"
+									 HorizontalAlignment="Stretch"/>
+						</Grid>
+						<!--Description-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackDescription}"
+									   VerticalAlignment="Top"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Height="200"
+									 Margin="3"
+									 Text="{Binding CommonDescription}"
+									 AcceptsReturn="True"
+									 TextWrapping="Wrap"
+									 HorizontalAlignment="Stretch"
+									 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+						</Grid>
+						<!--Comment-->
+						<Grid ColumnDefinitions="120,*">
+							<TextBlock Text="{x:Static lang:Resources.TrackComment}"
+									   VerticalAlignment="Top"
+									   HorizontalAlignment="Right"
+									   Margin="2"/>
+							<TextBox Grid.Column="1"
+									 Height="200"
+									 Margin="3"
+									 Text="{Binding CommonComment}"
+									 AcceptsReturn="True"
+									 TextWrapping="Wrap"
+									 HorizontalAlignment="Stretch"
+									 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</ScrollViewer>
+			<GridSplitter Height="3" Grid.Row="1"/>
+			<!--Cover-->
+			<TextBlock Text="{x:Static lang:Resources.TrackCover}"
+					   VerticalAlignment="Center"
+					   HorizontalAlignment="Center"
+					   Grid.Row="2"/>
+			<cc:RoundedImage Source="{Binding CommonTrackCover}"
+							 CornerRadius="15"
+							 Grid.Row="3"
+							 Margin="5"/>
+			<!--Save button-->
+			<Button Grid.Row="4"
+					Margin="10 0"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					HorizontalAlignment="Stretch"
+					Content="{x:Static lang:Resources.Save}"
+					Background="#7798ff98"
+					Click="OnSaveClick"
+					Name="SaveButton"/>
+		</Grid>
+		<Grid Grid.Column="2" 
+			  DataContext="{Binding EditingModel}"
+			  x:DataType="vm:MultiTrackViewModel"
+			  IsVisible="False">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*" MinWidth="120" MaxWidth="200"/>
+				<ColumnDefinition Width="2*" MinWidth="150" MaxWidth="600"/>
+				<ColumnDefinition Width="2*" MinWidth="160" MaxWidth="200"/>
+				<ColumnDefinition Width="2*" MinWidth="140" MaxWidth="600"/>
+				<ColumnDefinition Width="2*" MinWidth="120" MaxWidth="200"/>
+				<ColumnDefinition Width="2*" MinWidth="200" MaxWidth="600"/>
+				<ColumnDefinition Width="*" MinWidth="40"/>
+				<ColumnDefinition Width="3*" MinWidth="150" MaxWidth="300"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="30"/>
+			</Grid.RowDefinitions>
+			<!--Row 0-->
+			
+			
+			
+
+			<!--Row 1-->
+			
+			
+			<!--A little shrinking to save free space-->
+			<Grid Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="4*" MinWidth="100"/>
+					<ColumnDefinition Width="*" MinWidth="40"/>
+					<ColumnDefinition Width="20"/>
+					<ColumnDefinition Width="*" MinWidth="40"/>
+					<ColumnDefinition MinWidth="10"/>
+					<ColumnDefinition Width="2*" MinWidth="60"/>
+					<ColumnDefinition Width="4*" MinWidth="120"/>
+				</Grid.ColumnDefinitions>
+				
+
+				
+			</Grid>
+			<!--Row 2-->
+			
+			
+			<!--Shrinking for the year and disc-->
+			<Grid Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="4*" MinWidth="100"/>
+					<ColumnDefinition Width="*" MinWidth="40"/>
+					<ColumnDefinition Width="20"/>
+					<ColumnDefinition Width="*" MinWidth="40"/>
+					<ColumnDefinition MinWidth="10"/>
+					<ColumnDefinition Width="2*" MinWidth="60"/>
+					<ColumnDefinition Width="4*" MinWidth="80"/>
+				</Grid.ColumnDefinitions>
+				
+
+				
+			</Grid>
+			
+			<!-- Row 3 -->
+			
+			<Grid Grid.Column="4" Grid.Row="3" Grid.ColumnSpan="2"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Stretch">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" MinWidth="100"/>
+					<ColumnDefinition Width="2*" MinWidth="125" MaxWidth="200"/>
+					<ColumnDefinition Width="2*" MinWidth="80" MaxWidth="200"/>
+				</Grid.ColumnDefinitions>
+				
+			</Grid>
+			
+			<!--<TextBlock Grid.Column="4" Grid.Row="3"
+					   Text="{x:Static lang:Resources.TrackCover}"
+					   VerticalAlignment="Center"
+					   HorizontalAlignment="Right"
+					   Margin="2"/>
+			<RelativePanel Grid.Column="5" Grid.Row="3"
+					 Margin="3"
+					 HorizontalAlignment="Stretch">
+				<TextBox Text="{Binding CoverUrl}"
+						 RelativePanel.AlignVerticalCenterWithPanel="True"
+						 RelativePanel.AlignRightWith="Anchor"
+						 RelativePanel.AlignLeftWithPanel="True"/>
+				<Border Name="Anchor" RelativePanel.LeftOf="BrowseCover"/>
+				<Button RelativePanel.AlignRightWithPanel="True"
+						RelativePanel.AlignVerticalCenterWithPanel="True"
+						Margin="2"
+						Height="35"
+						Name="BrowseCover">
+					<TextBlock Classes="icons" Text="&#xe838;"/>
+				</Button>
+			</RelativePanel>-->
+
+
+			
+			
+		</Grid>
+	</Grid>
+</UserControl>

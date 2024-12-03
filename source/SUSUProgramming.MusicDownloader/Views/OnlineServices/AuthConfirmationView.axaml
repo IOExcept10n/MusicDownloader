@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SUSUProgramming.MusicDownloader.AuthConfirmationView">
+	<UserControl.Background>
+		<ImageBrush Source="/Assets/frog-with-laptop.jpg" Opacity="0.1" Stretch="UniformToFill"/>
+	</UserControl.Background>
+	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+		<TextBlock Text="{x:Static lang:Resources.AuthConfirmation}"/>
+		<Button HorizontalAlignment="Center"
+				Content="{x:Static lang:Resources.ConfirmAuth}" 
+				Margin="5"
+				Click="Button_Click"/>
+	</StackPanel>
+</UserControl>

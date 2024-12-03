@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SUSUProgramming.MusicDownloader.ViewModels"
+			 xmlns:local="clr-namespace:SUSUProgramming.MusicDownloader.Views;assembly=SUSUProgramming.MusicDownloader"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SUSUProgramming.MusicDownloader.Views.MainView"
+             x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+  <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+	<SplitView x:Name="MainSplitView" 
+			   IsPaneOpen="{Binding IsPaneOpened}" 
+			   OpenPaneLength="300" 
+			   CompactPaneLength="64" 
+			   DisplayMode="CompactInline" 
+			   Background="#1e1e1e" 
+			   PaneBackground="#1e1e1e">
+		<SplitView.Pane>
+			<StackPanel
+				Spacing="5"
+				Margin="5">
+				<ToggleButton IsChecked="{Binding IsPaneOpened}" 
+							  Background="Transparent"
+							  Width="40"
+							  Height="40"
+							  Margin="8,0,0,0"
+							  Padding="5"
+							  VerticalContentAlignment="Center"
+							  HorizontalContentAlignment="Center">
+					<TextBlock Classes="icons" Padding="0,3" Height="30" Width="30" Text="&#xE700;" FontSize="24"/>
+				</ToggleButton>
+				<ListBox x:Name="Sidebar"
+						 ItemsSource="{Binding SidebarItems}"
+						 SelectionChanged="ListBox_SelectionChanged"
+						 SelectionMode="AlwaysSelected"
+						 SelectedIndex="0">
+					<ListBox.ItemTemplate>
+						<DataTemplate DataType="vm:SidebarItemViewModel">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+								<TextBlock Padding="4" TextAlignment="Center" Text="{Binding IconText}" FontFamily="Segoe Fluent Icons" FontSize="24"/>
+								<TextBlock Margin="20 2" Grid.Column="1" Text="{Binding TitleText}" FontSize="20"/>
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</StackPanel>
+		</SplitView.Pane>
+		<SplitView.Content>
+			<Border CornerRadius="12 0 0 0" 
+					Background="#2d2d2d">
+				<TransitioningContentControl Content="{Binding CurrentPage}"/>
+			</Border>
+		</SplitView.Content>
+	</SplitView>
+</UserControl>

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:SUSUProgramming.MusicDownloader.Views.OnlineServices"
+			 xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SUSUProgramming.MusicDownloader.Views.OnlineServices.OnlineView">
+	<TabControl>
+		<TabItem Header="{x:Static lang:Resources.MyMusic}">
+			<v:MyOnlineTracksView/>
+		</TabItem>
+		<TabItem Header="{x:Static lang:Resources.OnlineSearch}">
+			<v:SearchView/>
+		</TabItem>
+		<TabItem Header="{x:Static lang:Resources.Recommendations}">
+			<v:RecommendationsView/>
+		</TabItem>
+	</TabControl>
+</UserControl>
