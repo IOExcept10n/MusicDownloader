@@ -14,9 +14,13 @@
 	<Description>An Avalonia program that can download and tag music files</Description>
 	<Copyright>Copyright © IOExcept10n, 2024</Copyright>
 	<PackageTags>avalonia;dotnet;vk;music;audio;tags;id3</PackageTags>
-	<AssemblyVersion>1.0.2</AssemblyVersion>
-	<FileVersion>1.0.2</FileVersion>
+	<AssemblyVersion>1.0.3</AssemblyVersion>
+	<FileVersion>1.0.3</FileVersion>
+	<ApplicationIcon>avalonia-logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="avalonia-logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />

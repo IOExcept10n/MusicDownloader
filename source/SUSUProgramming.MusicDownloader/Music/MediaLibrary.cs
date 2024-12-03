@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -151,7 +152,7 @@ namespace SUSUProgramming.MusicDownloader.Music
                 case NotifyCollectionChangedAction.Add:
                     foreach (TrackDetails track in e.NewItems!)
                     {
-                        tracksNameMapping.Add(track, track.FormedTrackName);
+                        tracksNameMapping[track] = track.FormedTrackName;
                         trackNamesSet.Add(track.FormedTrackName);
                         track.PropertyChanged += OnTrackPropertyChanged;
                     }

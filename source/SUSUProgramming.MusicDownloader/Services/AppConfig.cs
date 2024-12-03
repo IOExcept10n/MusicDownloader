@@ -27,17 +27,17 @@ namespace SUSUProgramming.MusicDownloader.Services
         /// Defaults to a folder named "Unsorted" in the user's music directory.
         /// </summary>
         public string UnsortedTracksPath { get; set; } =
-            Path.Combine(System.Reflection.Assembly.GetExecutingAssembly().Location, "Unsorted");
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Unsorted");
 
         /// <summary>
         /// Gets or sets the collection of tracked music paths.
         /// Defaults to the user's music directory and the common music directory.
         /// </summary>
         public ObservableCollection<string> TrackedPaths { get; set; } = new ObservableCollection<string>
-    {
-        Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
-    };
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
+        };
 
         /// <summary>
         /// Gets or sets the collection of genres.

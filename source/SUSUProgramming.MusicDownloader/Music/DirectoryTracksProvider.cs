@@ -93,6 +93,7 @@ namespace SUSUProgramming.MusicDownloader.Music
                     lastInc ??= inc;
                     lastInc = Math.Max(lastInc.Value, inc);
                 }
+
                 tracks.Add(file, track);
                 tracksObservable.Add(track);
             }

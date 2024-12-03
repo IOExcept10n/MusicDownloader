@@ -13,10 +13,17 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
-        var settings = App.Services.GetRequiredService<AppConfig>();
-        settings.Save();
+        try
+        {
+            BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(args);
+            var settings = App.Services.GetRequiredService<AppConfig>();
+            settings.Save();
+        }
+        catch (Exception ex)
+        {
+            System.IO.File.WriteAllText("CrashReport.log", ex.ToString());
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
