@@ -1,17 +1,28 @@
-using Avalonia.Controls;
+// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+using Avalonia.Controls;
 
 namespace SUSUProgramming.MusicDownloader.Views;
 
+/// <summary>
+/// Represents a window for the path editing.
+/// </summary>
 public partial class EditPathWindow : Window
 {
-    public EditPathWindow(string? path = null) : this()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EditPathWindow"/> class.
+    /// </summary>
+    /// <param name="path">Default path to set to text box.</param>
+    public EditPathWindow(string? path = null)
+        : this()
     {
         PathTextBox.Text = path;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EditPathWindow"/> class.
+    /// </summary>
     public EditPathWindow()
     {
         InitializeComponent();
@@ -45,6 +56,7 @@ public partial class EditPathWindow : Window
             SetFailVisibility(true);
             return;
         }
+
         Close(PathTextBox.Text);
     }
 

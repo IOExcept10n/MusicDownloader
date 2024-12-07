@@ -99,7 +99,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             }
             else if (Unsorted.DirectoryContainsPath(newPath))
             {
-                oldProvider = trackProviders.First(x => x.DirectoryContainsPath(newPath));
+                oldProvider = trackProviders.First(x => x.DirectoryContainsPath(oldPath));
                 newProvider = Unsorted;
             }
             else
@@ -108,7 +108,7 @@ namespace SUSUProgramming.MusicDownloader.Music
                 return;
             }
 
-            string newFileName = $"{newProvider.LastIncrementalNumber}. {track.FormedArtistString} - {track.FormedTitle}.mp3";
+            string newFileName = $"{++newProvider.LastIncrementalNumber:D3}. {track.FormedArtistString} - {track.FormedTitle}.mp3";
             foreach (char c in Path.GetInvalidFileNameChars())
                 newFileName = newFileName.Replace(c, '_');
             newFileName = Path.Combine(newPath, newFileName);

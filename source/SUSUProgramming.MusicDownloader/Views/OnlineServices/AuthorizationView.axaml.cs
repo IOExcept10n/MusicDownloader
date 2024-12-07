@@ -1,18 +1,21 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.ViewModels;
-using System;
-using System.Runtime.InteropServices;
 
 namespace SUSUProgramming.MusicDownloader.Views.OnlineServices;
 
+/// <summary>
+/// Represents a view for user authorization.
+/// </summary>
 [View]
 public partial class AuthorizationView : UserControl
 {
     private readonly AuthorizationViewModel vm;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthorizationView"/> class.
+    /// </summary>
     public AuthorizationView()
     {
         InitializeComponent();

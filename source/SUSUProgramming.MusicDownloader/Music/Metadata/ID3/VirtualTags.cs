@@ -53,5 +53,4 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.ID3
             HasCover,
         ];
     }
-
 }

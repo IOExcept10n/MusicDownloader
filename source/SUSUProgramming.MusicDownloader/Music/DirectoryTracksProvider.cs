@@ -1,15 +1,15 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
-using SUSUProgramming.MusicDownloader.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
+using SUSUProgramming.MusicDownloader.Services;
 
 namespace SUSUProgramming.MusicDownloader.Music
 {
@@ -44,9 +44,13 @@ namespace SUSUProgramming.MusicDownloader.Music
         }
 
         /// <summary>
-        /// Gets the last incremental number among the tracks in the directory.
+        /// Gets or sets the last incremental number among the tracks in the directory.
         /// </summary>
-        public int LastIncrementalNumber => lastInc ?? Tracks.Count;
+        public int LastIncrementalNumber
+        {
+            get => lastInc ?? Tracks.Count;
+            set => lastInc = value;
+        }
 
         /// <summary>
         /// Gets the path of the tracked directory.
@@ -118,7 +122,14 @@ namespace SUSUProgramming.MusicDownloader.Music
         internal void RemoveTrack(string oldPath)
         {
             if (tracks.Remove(oldPath, out var value))
+            {
+                if (value.TryGetTag(nameof(VirtualTags.IncrementalNumber), out int inc) && inc == lastInc)
+                {
+                    lastInc--;
+                }
+
                 tracksObservable.Remove(value);
+            }
         }
 
         private void OnFileRename(object sender, RenamedEventArgs e)
@@ -137,6 +148,7 @@ namespace SUSUProgramming.MusicDownloader.Music
         private void OnFileUpdate(object sender, FileSystemEventArgs e)
         {
             // HACK: for now, when downloading track into scanned location, it tries to read data when track is not ready yet. Let's fix it later.
+            /*
             //switch (e.ChangeType)
             //{
             //    case WatcherChangeTypes.Created:
@@ -150,6 +162,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             //        tracksObservable.Remove(track);
             //        return;
             //}
+            */
         }
 
         private void OnWatchingError(object sender, ErrorEventArgs e) => App.Services

@@ -22,7 +22,7 @@ namespace SUSUProgramming.MusicDownloader.Music
         private static readonly List<string> SlashContainedPerformersList =
             App.Services.GetRequiredService<IConfiguration>()
                 .GetSection(nameof(SlashContainedPerformersList))
-                .Get<List<string>>() ?? new List<string>();
+                .Get<List<string>>() ?? [];
 
         /// <summary>
         /// A list of tuples containing formatted performer names and their original names,
@@ -59,8 +59,8 @@ namespace SUSUProgramming.MusicDownloader.Music
         public static string[] GetPerformers(string formedPerformers)
         {
             return formedPerformers
-                .Split(new[] { "feat. ", "ft." }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .SelectMany(x => x.Split(new[] { ',', ';' }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                .Split(["feat. ", "ft."], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .SelectMany(x => x.Split([',', ';'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
         }
 
@@ -89,7 +89,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             [NotNullWhen(true)] out string? title,
             [NotNullWhen(true)] out string? subtitle)
         {
-            performers = Array.Empty<string>();
+            performers = [];
             title = string.Empty;
             subtitle = string.Empty;
 
@@ -102,7 +102,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             if (parts.Length == 1)
             {
                 title = parts[0];
-                performers = Array.Empty<string>();
+                performers = [];
                 subtitle = string.Empty;
                 return !string.IsNullOrWhiteSpace(title);
             }

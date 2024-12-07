@@ -23,6 +23,8 @@ class Program
         catch (Exception ex)
         {
             System.IO.File.WriteAllText("CrashReport.log", ex.ToString());
+            // Throw it again for debugging purposes
+            throw;
         }
     }
 

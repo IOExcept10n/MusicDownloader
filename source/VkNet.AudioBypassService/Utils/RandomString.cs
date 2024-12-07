@@ -10,7 +10,7 @@ namespace VkNet.AudioBypassService.Utils
 		public static string Generate(int length)
 		{
 			var bytes = new byte[length];
-			using (var crypto = new RNGCryptoServiceProvider())
+			using (var crypto = RandomNumberGenerator.Create())
 			{
 				crypto.GetBytes(bytes);
 			}

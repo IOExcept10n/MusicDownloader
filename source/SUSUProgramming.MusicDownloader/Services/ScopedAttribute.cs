@@ -10,14 +10,4 @@ namespace SUSUProgramming.MusicDownloader.Services
     internal class ScopedAttribute : Attribute
     {
     }
-
-    /// <summary>
-    /// Indicates that a class should be registered as a singleton service in a dependency injection container.
-    /// A singleton service is created once and shared throughout the application's lifetime.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    internal class SingletonAttribute : Attribute
-    {
-    }
-
 }

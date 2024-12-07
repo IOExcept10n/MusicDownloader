@@ -50,5 +50,4 @@ namespace SUSUProgramming.MusicDownloader.Controls
             return result; // Return the calculated size
         }
     }
-
 }

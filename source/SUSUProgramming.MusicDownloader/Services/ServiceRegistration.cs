@@ -90,8 +90,8 @@ namespace SUSUProgramming.MusicDownloader.Services
         public static IServiceCollection AddMediaServices(this IServiceCollection services)
         {
             services.AddAudioBypass();
-            var vkApi = new VkApi(services);
-            services.AddSingleton(vkApi)
+            var api = new VkApi(services);
+            services.AddSingleton(api)
                     .AddSingleton<VkOAuthService>()
                     .AddSingleton<IMediaProvider, VkMediaProvider>()
                     .AddSingleton<TracksAsyncLoader>()
