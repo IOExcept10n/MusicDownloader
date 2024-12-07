@@ -20,7 +20,7 @@ public partial class App : Application
     /// <summary>
     /// Gets the set of used application services.
     /// </summary>
-    public static IServiceProvider Services { get; private set; }
+    public static IServiceProvider Services { get; private set; } = null!;
 
     /// <inheritdoc/>
     public override void Initialize()

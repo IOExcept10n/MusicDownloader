@@ -1,4 +1,6 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
+// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under CC BY-NC 4.0 license. See LICENSE.md file in the project root for more information
 using System;
 using System.Net.Http;
@@ -18,13 +20,13 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata
         /// </summary>
         public const string Category = "Metadata";
 
+        /// <inheritdoc/>
+        public Uri BaseUrl { get; } = new(url);
+
         /// <summary>
         /// Gets the API helper instance for this metadata provider.
         /// </summary>
         protected ApiHelper Api { get; } = api;
-
-        /// <inheritdoc/>
-        public Uri BaseUrl { get; } = new(url);
 
         /// <summary>
         /// Gets the HTTP client for this API client.

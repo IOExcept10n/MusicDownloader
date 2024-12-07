@@ -1,9 +1,12 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 
 namespace SUSUProgramming.MusicDownloader.Music
@@ -50,10 +53,17 @@ namespace SUSUProgramming.MusicDownloader.Music
                 ThrowFileNotFoundException(FileNotFoundMessage);
             }
 
-            TagLib.File file = TagLib.File.Create(details.FilePath);
-            foreach (var tag in details)
-                tag.Apply(file);
-            file.Save();
+            try
+            {
+                TagLib.File file = TagLib.File.Create(details.FilePath);
+                foreach (var tag in details)
+                    tag.Apply(file);
+                file.Save();
+            }
+            catch (Exception ex)
+            {
+                App.Services.GetRequiredService<ILogger>().LogError("Couldn't save metadata because file cannot be accessed. Exception details: {ex}.", ex.Message);
+            }
         }
 
         /// <summary>

@@ -1,25 +1,33 @@
-using Avalonia;
+// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Services;
 using SUSUProgramming.MusicDownloader.ViewModels;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace SUSUProgramming.MusicDownloader.Views.OnlineServices;
 
+/// <summary>
+/// Represents a view for user's recommendations.
+/// </summary>
 [View]
 public partial class RecommendationsView : UserControl
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RecommendationsView"/> class.
+    /// </summary>
     public RecommendationsView()
     {
         InitializeComponent();
         DataContext = App.Services.GetRequiredService<OnlineLibViewModel>();
     }
 
+    /// <inheritdoc/>
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         if (DataContext is not OnlineLibViewModel online)
@@ -37,7 +45,6 @@ public partial class RecommendationsView : UserControl
         await online.DownloadTrack(vm);
     }
 
-
     private async Task DownloadAndRunSelectedAsync()
     {
         if (DataContext is not OnlineLibViewModel online)
@@ -54,6 +61,7 @@ public partial class RecommendationsView : UserControl
                 writer.WriteLine(result.FilePath);
             }
         }
+
         var info = new ProcessStartInfo()
         {
             FileName = tempFile,
@@ -64,15 +72,13 @@ public partial class RecommendationsView : UserControl
 
     private void ToggleIgnored()
     {
-        if (DataContext is not OnlineLibViewModel online)
+        if (DataContext is not OnlineLibViewModel)
             return;
         var settings = App.Services.GetRequiredService<AppConfig>();
         foreach (OnlineTrackViewModel vm in TracksList.SelectedItems!)
         {
             string name = vm.Model.FormedTrackName;
-            if (settings.BlacklistedTrackNames.Contains(name))
-                settings.BlacklistedTrackNames.Remove(name);
-            else
+            if (!settings.BlacklistedTrackNames.Remove(name))
                 settings.BlacklistedTrackNames.Add(name);
         }
     }

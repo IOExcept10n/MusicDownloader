@@ -1,16 +1,23 @@
+// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.ViewModels;
-using System.Threading.Tasks;
 
 namespace SUSUProgramming.MusicDownloader.Views;
 
+/// <summary>
+/// Represents preferences view.
+/// </summary>
 [View]
 public partial class PreferencesView : UserControl
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PreferencesView"/> class.
+    /// </summary>
     public PreferencesView()
     {
         InitializeComponent();

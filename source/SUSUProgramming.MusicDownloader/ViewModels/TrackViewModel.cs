@@ -1,5 +1,10 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -7,14 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Music;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
-using System;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SUSUProgramming.MusicDownloader.ViewModels
 {
+    /// <summary>
+    /// Defines a state of the track processing.
+    /// </summary>
     public enum TrackProcessingState
     {
         /// <summary>
@@ -63,15 +66,22 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         Conflicting,
     }
 
+    /// <summary>
+    /// Represents a view model for the track details.
+    /// </summary>
     internal partial class TrackViewModel : ViewModelBase
     {
+        private static readonly Bitmap EmptyCover = new(AssetLoader.Open(new("avares://SUSUProgramming.MusicDownloader/Assets/music.png")));
         private static readonly string[] RecommendedTags = [nameof(Album), nameof(Genres), nameof(Year), nameof(Track)];
         private static readonly string[] RequiredTags = [nameof(Title), nameof(Performers)];
-        private static readonly Bitmap EmptyCover = new(AssetLoader.Open(new("avares://SUSUProgramming.MusicDownloader/Assets/music.png")));
         private readonly TrackDetails track;
-        private bool isCoverDirty = true;
         private Bitmap? cover;
+        private bool isCoverDirty = true;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackViewModel"/> class.
+        /// </summary>
+        /// <param name="track">Track instance to use.</param>
         public TrackViewModel(TrackDetails track)
         {
             this.track = track;
@@ -80,32 +90,38 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             ResetState();
         }
 
+        /// <summary>
+        /// Gets or sets the album name of the track.
+        /// </summary>
         public string? Album { get => Read<string>(); set => Update(value); }
 
+        /// <summary>
+        /// Gets or sets the array of album artists associated with the track.
+        /// </summary>
         public string[]? AlbumArtists
         {
             get => Read<string[]>();
             set => Update(value);
         }
 
+        /// <summary>
+        /// Gets or sets a string representation of the album artists, joined by commas.
+        /// </summary>
         public string? AlbumArtistsString
         {
             get => AlbumArtists == null ? null : string.Join(", ", AlbumArtists);
             set => AlbumArtists = value == null ? null : TrackNameParser.GetPerformers(value);
         }
 
+        /// <summary>
+        /// Gets or sets comments associated with the track.
+        /// </summary>
         public string? Comment { get => Read<string>(); set => Update(value); }
 
-        public Bitmap TrackCover
-        {
-            get
-            {
-                if (isCoverDirty)
-                    UpdateCover();
-                return track.HasCover ? (cover ?? EmptyCover) : EmptyCover;
-            }
-        }
-
+        /// <summary>
+        /// Gets or sets the URL of the cover image for the track.
+        /// If the URL is null, the cover is removed from the track.
+        /// </summary>
         public Uri? CoverUrl
         {
             get => track.CoverUri;
@@ -119,7 +135,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                         track.Remove(cover);
                     return;
                 }
-                // Yeaaah, blocking wait...
+
+                // Blocking wait for cover download; consider refactoring to avoid blocking.
                 var http = App.Services.GetRequiredService<ApiHelper>().Client;
                 if (!track.HasCover)
                 {
@@ -132,31 +149,67 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets a description of the track.
+        /// </summary>
         public string? Description { get => Read<string>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets or sets the disc number of the track.
+        /// </summary>
         public uint Disc { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets or sets the total number of discs for the album.
+        /// </summary>
         public uint DiscCount { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets or sets the array of genres associated with the track.
+        /// </summary>
         public string[]? Genres { get => Read<string[]>(); set => Update(value); }
 
+        /// <summary>
+        /// Gets or sets a string representation of the genres, joined by commas or semicolons.
+        /// </summary>
         public string? GenresString
         {
             get => Genres == null ? null : string.Join(", ", Genres);
             set => Genres = value?.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
+        /// <summary>
+        /// Gets or sets the lyrics of the track.
+        /// </summary>
         public string? Lyrics { get => Read<string>(); set => Update(value); }
 
+        /// <summary>
+        /// Gets the model representing the track details.
+        /// </summary>
         public TrackDetails Model => track;
 
+        /// <summary>
+        /// Gets or sets the array of performers associated with the track.
+        /// </summary>
         public string[]? Performers { get => Read<string[]>(); set => Update(value); }
 
+        /// <summary>
+        /// Gets or sets the array of roles for the performers.
+        /// </summary>
         public string[]? PerformersRole { get => Read<string[]>(); set => Update(value); }
 
+        /// <summary>
+        /// Gets or sets a string representation of the performers, formatted as a single string.
+        /// </summary>
         public string? PerformersString
         {
             get => track.FormedArtistString;
             set => Performers = value == null ? null : TrackNameParser.GetPerformers(value);
         }
 
+        /// <summary>
+        /// Gets the color representing the processing state of the track.
+        /// </summary>
         public SolidColorBrush ProcessingStateColor => new(State switch
         {
             TrackProcessingState.Unknown => Colors.Black,
@@ -168,22 +221,76 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             TrackProcessingState.TagsNotFound => Colors.Yellow,
             TrackProcessingState.Conflicting => Colors.OrangeRed,
             TrackProcessingState.Fault => Colors.Red,
-            _ => Colors.Violet
+            _ => Colors.Violet,
         });
 
-        public string? Subtitle { get => Read<string>(); set => Update(value); }
-        public int TagsCount => track.Count(x => x is not VirtualTag);
-        public string? Title { get => Read<string>(); set => Update(value); }
-        public uint Track { get => Read<uint>(); set => Update(value); }
-        public uint TrackCount { get => Read<uint>(); set => Update(value); }
-        public uint Year { get => Read<uint>(); set => Update(value); }
+        /// <summary>
+        /// Gets or sets the processing state of the track.
+        /// </summary>
         public TrackProcessingState State { get => Read<TrackProcessingState>(); set => Update(value); }
 
-        public void Save()
+        /// <summary>
+        /// Gets or sets the subtitle of the track.
+        /// </summary>
+        public string? Subtitle { get => Read<string>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets the count of tags associated with the track, excluding virtual tags.
+        /// </summary>
+        public int TagsCount => track.Count(x => x is not VirtualTag);
+
+        /// <summary>
+        /// Gets or sets the title of the track.
+        /// </summary>
+        public string? Title { get => Read<string>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets or sets the track number within the album.
+        /// </summary>
+        public uint Track { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets or sets the total number of tracks in the album.
+        /// </summary>
+        public uint TrackCount { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Gets the cover image for the track. If the cover is marked as dirty, it will be updated.
+        /// </summary>
+        public Bitmap TrackCover
         {
-            MetadataManager.SaveMetadata(Model);
+            get
+            {
+                if (isCoverDirty)
+                    UpdateCover();
+                return track.HasCover ? (cover ?? EmptyCover) : EmptyCover;
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the year the track was released.
+        /// </summary>
+        public uint Year { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Refreshes the properties of the track by notifying property changes for required and recommended tags.
+        /// </summary>
+        public void Refresh()
+        {
+            foreach (var property in RequiredTags)
+            {
+                OnPropertyChanged(property);
+            }
+
+            foreach (var property in RecommendedTags)
+            {
+                OnPropertyChanged(property);
+            }
+        }
+
+        /// <summary>
+        /// Resets the processing state of the track based on the presence of required and recommended tags.
+        /// </summary>
         public void ResetState()
         {
             if (RequiredTags.All(track.Contains))
@@ -193,24 +300,23 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                     State = TrackProcessingState.Complete;
                     return;
                 }
+
                 State = TrackProcessingState.Incomplete;
                 return;
             }
+
             State = TrackProcessingState.Untagged;
         }
 
-        public void Refresh()
+        /// <summary>
+        /// Saves the current metadata of the track using the metadata manager.
+        /// </summary>
+        public void Save()
         {
-            foreach (var property in RequiredTags)
-            {
-                OnPropertyChanged(property);
-            }
-            foreach (var property in RecommendedTags)
-            {
-                OnPropertyChanged(property);
-            }
+            MetadataManager.SaveMetadata(Model);
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -218,6 +324,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             {
                 OnPropertyChanged(e.PropertyName + nameof(String));
             }
+
             if (e.PropertyName == nameof(State))
                 OnPropertyChanged(nameof(ProcessingStateColor));
         }
@@ -230,16 +337,6 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                 isCoverDirty = true;
                 OnPropertyChanged(nameof(TrackCover));
             }
-        }
-
-        private void UpdateCover()
-        {
-            cover?.Dispose();
-            var data = track.OfType<CoverTag>().FirstOrDefault()?.Cover?.Data;
-            if (data == null)
-                return;
-            using var memory = new MemoryStream(data.Data);
-            cover = new Bitmap(memory);
         }
 
         private void OnTrackUpdated(object? sender, PropertyChangedEventArgs e)
@@ -265,6 +362,16 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                 if (callerProperty != nameof(State))
                     ResetState();
             }
+        }
+
+        private void UpdateCover()
+        {
+            cover?.Dispose();
+            var data = track.OfType<CoverTag>().FirstOrDefault()?.Cover?.Data;
+            if (data == null)
+                return;
+            using var memory = new MemoryStream(data.Data);
+            cover = new Bitmap(memory);
         }
     }
 }

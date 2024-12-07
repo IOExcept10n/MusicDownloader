@@ -20,7 +20,7 @@ namespace SUSUProgramming.MusicDownloader.Services
         /// Gets all the available lyrics providers.
         /// </summary>
         public ObservableCollection<ILyricsProvider> LyricsProviders { get; } = [.. services.GetServices<ILyricsProvider>()];
-        
+
         /// <summary>
         /// Gets all the available detail providers.
         /// </summary>

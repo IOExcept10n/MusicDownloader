@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using Newtonsoft.Json;
@@ -23,36 +25,25 @@ namespace SUSUProgramming.MusicDownloader.Services
         }
 
         /// <summary>
-        /// Gets or sets the path for unsorted tracks.
-        /// Defaults to a folder named "Unsorted" in the user's music directory.
+        /// Gets or sets a value indicating whether to automatically tag tracks on download.
+        /// Defaults to <see langword="true"/>.
         /// </summary>
-        public string UnsortedTracksPath { get; set; } =
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Unsorted");
-
-        /// <summary>
-        /// Gets or sets the collection of tracked music paths.
-        /// Defaults to the user's music directory and the common music directory.
-        /// </summary>
-        public ObservableCollection<string> TrackedPaths { get; set; } = new ObservableCollection<string>
-        {
-            Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
-        };
-
-        /// <summary>
-        /// Gets or sets the collection of genres.
-        /// </summary>
-        public ObservableCollection<string> GenresList { get; set; } = new ObservableCollection<string>();
+        public bool AutoTagOnDownload { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the collection of blacklisted paths.
         /// </summary>
-        public ObservableCollection<string> BlacklistedPaths { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> BlacklistedPaths { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the collection of blacklisted track names.
         /// </summary>
-        public ObservableCollection<string> BlacklistedTrackNames { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> BlacklistedTrackNames { get; set; } = [];
+
+        /// <summary>
+        /// Gets or sets the collection of genres.
+        /// </summary>
+        public ObservableCollection<string> GenresList { get; set; } = [];
 
         /// <summary>
         /// Gets or sets a value indicating whether to rewrite metadata.
@@ -61,10 +52,21 @@ namespace SUSUProgramming.MusicDownloader.Services
         public bool RewriteMetadata { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to automatically tag tracks on download.
-        /// Defaults to <see langword="true"/>.
+        /// Gets or sets the collection of tracked music paths.
+        /// Defaults to the user's music directory and the common music directory.
         /// </summary>
-        public bool AutoTagOnDownload { get; set; } = true;
+        public ObservableCollection<string> TrackedPaths { get; set; } =
+        [
+            Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic),
+        ];
+
+        /// <summary>
+        /// Gets or sets the path for unsorted tracks.
+        /// Defaults to a folder named "Unsorted" in the user's music directory.
+        /// </summary>
+        public string UnsortedTracksPath { get; set; } =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Unsorted");
 
         /// <summary>
         /// Loads an existing configuration or initializes a new one if the specified path does not exist.
@@ -81,10 +83,14 @@ namespace SUSUProgramming.MusicDownloader.Services
             return new AppConfig(loadPath);
         }
 
-        private AppConfig WithLoadPath(string loadPath)
+        /// <summary>
+        /// Releases the resources used by the <see cref="AppConfig"/> class.
+        /// This method saves the current configuration before disposing of the instance.
+        /// </summary>
+        public void Dispose()
         {
-            pathToSave = loadPath;
-            return this;
+            Save();
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -95,14 +101,10 @@ namespace SUSUProgramming.MusicDownloader.Services
             File.WriteAllText(pathToSave, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
-        /// <summary>
-        /// Releases the resources used by the <see cref="AppConfig"/> class.
-        /// This method saves the current configuration before disposing of the instance.
-        /// </summary>
-        public void Dispose()
+        private AppConfig WithLoadPath(string loadPath)
         {
-            Save();
-            GC.SuppressFinalize(this);
+            pathToSave = loadPath;
+            return this;
         }
     }
 }

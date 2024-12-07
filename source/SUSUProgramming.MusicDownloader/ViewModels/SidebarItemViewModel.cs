@@ -1,17 +1,19 @@
-﻿using Avalonia.Controls;
+﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SUSUProgramming.MusicDownloader.ViewModels
 {
+    /// <summary>
+    /// Represents a view model for the sidebar panel item.
+    /// </summary>
     public partial class SidebarItemViewModel : ViewModelBase
     {
-        [ObservableProperty] private string iconText = string.Empty;
-        [ObservableProperty] private string titleText = string.Empty;
-        [ObservableProperty] private string navigationTargetTypeName = string.Empty;
+        [ObservableProperty]
+        private string iconText = string.Empty;
+        [ObservableProperty]
+        private string titleText = string.Empty;
+        [ObservableProperty]
+        private string navigationTargetTypeName = string.Empty;
     }
 }

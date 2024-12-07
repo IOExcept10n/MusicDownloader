@@ -19,6 +19,11 @@ namespace SUSUProgramming.MusicDownloader.Music.StreamingServices
         None,
 
         /// <summary>
+        /// Track is currently loading.
+        /// </summary>
+        Loading,
+
+        /// <summary>
         /// Track already exists in local library.
         /// </summary>
         Exists,

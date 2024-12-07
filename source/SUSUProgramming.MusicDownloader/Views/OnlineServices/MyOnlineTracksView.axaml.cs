@@ -1,38 +1,38 @@
+// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
+// Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Services;
 using SUSUProgramming.MusicDownloader.ViewModels;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace SUSUProgramming.MusicDownloader.Views.OnlineServices;
 
+/// <summary>
+/// Represents a view for user's online tracks.
+/// </summary>
 [View]
 public partial class MyOnlineTracksView : UserControl
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MyOnlineTracksView"/> class.
+    /// </summary>
     public MyOnlineTracksView()
     {
         InitializeComponent();
         DataContext = App.Services.GetRequiredService<OnlineLibViewModel>();
     }
 
+    /// <inheritdoc/>
     protected override async void OnLoaded(RoutedEventArgs e)
     {
         if (DataContext is not OnlineLibViewModel online)
             return;
         await online.Loader.ScanAsync(x => x.ListUserTracksAsync());
         base.OnLoaded(e);
-    }
-
-    private async void OnDownloadClick(object? sender, RoutedEventArgs e)
-    {
-        if (sender is not Control c || c.DataContext is not OnlineTrackViewModel vm)
-            return;
-        if (DataContext is not OnlineLibViewModel online)
-            return;
-        await online.DownloadTrack(vm);
     }
 
     private async Task DownloadAndRunSelectedAsync()
@@ -51,6 +51,7 @@ public partial class MyOnlineTracksView : UserControl
                 writer.WriteLine(result.FilePath);
             }
         }
+
         var info = new ProcessStartInfo()
         {
             FileName = tempFile,
@@ -59,19 +60,18 @@ public partial class MyOnlineTracksView : UserControl
         Process.Start(info);
     }
 
-    private void ToggleIgnored()
+    private async void OnDoubleTap(object? sender, Avalonia.Input.TappedEventArgs e)
     {
+        await DownloadAndRunSelectedAsync();
+    }
+
+    private async void OnDownloadClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control c || c.DataContext is not OnlineTrackViewModel vm)
+            return;
         if (DataContext is not OnlineLibViewModel online)
             return;
-        var settings = App.Services.GetRequiredService<AppConfig>();
-        foreach (OnlineTrackViewModel vm in TracksList.SelectedItems!)
-        {
-            string name = vm.Model.FormedTrackName;
-            if (settings.BlacklistedTrackNames.Contains(name))
-                settings.BlacklistedTrackNames.Remove(name);
-            else
-                settings.BlacklistedTrackNames.Add(name);
-        }
+        await online.DownloadTrack(vm);
     }
 
     private async void OnLoadAndPlayClick(object? sender, RoutedEventArgs e)
@@ -84,8 +84,16 @@ public partial class MyOnlineTracksView : UserControl
         ToggleIgnored();
     }
 
-    private async void OnDoubleTap(object? sender, Avalonia.Input.TappedEventArgs e)
+    private void ToggleIgnored()
     {
-        await DownloadAndRunSelectedAsync();
+        if (DataContext is not OnlineLibViewModel online)
+            return;
+        var settings = App.Services.GetRequiredService<AppConfig>();
+        foreach (OnlineTrackViewModel vm in TracksList.SelectedItems!)
+        {
+            string name = vm.Model.FormedTrackName;
+            if (!settings.BlacklistedTrackNames.Remove(name))
+                settings.BlacklistedTrackNames.Add(name);
+        }
     }
 }

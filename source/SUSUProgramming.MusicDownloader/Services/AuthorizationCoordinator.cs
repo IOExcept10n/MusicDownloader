@@ -75,14 +75,16 @@ namespace SUSUProgramming.MusicDownloader.Services
                 await auth.AuthorizeAsync(info);
             }
 
+            // TODO: add network connection check.
             bool isValid = await auth.CheckTokenAsync();
             if (!isValid)
             {
+                /*
                 if (tokens.TokenRegistered(ApiService.Name))
                 {
                     tokens.DeleteToken(ApiService.Name);
                 }
-
+                */
                 await auth.LogoutAsync();
                 return false;
             }

@@ -11,8 +11,8 @@ namespace SUSUProgramming.MusicDownloader.Collections
 {
     /// <summary>
     /// Represents a multi-projection of multiple source collections into a read-only collection of projected items.
-    /// This class implements <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/> 
-    /// to provide notifications when any of the underlying source collections change or when properties of the 
+    /// This class implements <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/>
+    /// to provide notifications when any of the underlying source collections change or when properties of the
     /// projected items change.
     /// </summary>
     /// <typeparam name="TSource">The type of the source collection items.</typeparam>

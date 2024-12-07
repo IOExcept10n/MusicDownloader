@@ -74,15 +74,13 @@ namespace SUSUProgramming.MusicDownloader.Collections
             else
             {
                 // If we can't get the count, we enumerate the first two items
-                using (var enumerator = values.GetEnumerator())
+                using var enumerator = values.GetEnumerator();
+                if (enumerator.MoveNext())
                 {
-                    if (enumerator.MoveNext())
+                    var first = enumerator.Current;
+                    if (!enumerator.MoveNext())
                     {
-                        var first = enumerator.Current;
-                        if (!enumerator.MoveNext())
-                        {
-                            return first; // Exactly one item
-                        }
+                        return first; // Exactly one item
                     }
                 }
             }
@@ -97,7 +95,7 @@ namespace SUSUProgramming.MusicDownloader.Collections
         /// <param name="items">The collection of items to search through.</param>
         /// <param name="predicate">A function that defines the condition to be met. It takes an element of type <typeparamref name="T"/> and returns a boolean value.</param>
         /// <returns>
-        /// The zero-based index of the first element that satisfies the condition defined by the <paramref name="predicate"/>; 
+        /// The zero-based index of the first element that satisfies the condition defined by the <paramref name="predicate"/>;
         /// or -1 if no such element is found.
         /// </returns>
         /// <exception cref="ArgumentNullException">
