@@ -72,7 +72,7 @@ namespace SUSUProgramming.MusicDownloader.Services
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings1.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             var config = builder.Build();
             var settings = AppConfig.LoadOrInitialize(config["SettingsPath"] ?? ".config");
             services.AddSingleton<IConfiguration>(config)
