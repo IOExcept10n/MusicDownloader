@@ -322,4 +322,34 @@
   <data name="GithubReference" xml:space="preserve">
     <value>Репозиторий проекта: https://github.com/IOExcept10n/MusicDownloader</value>
   </data>
+  <data name="ConflictsWindow" xml:space="preserve">
+    <value>Разрешить конфликты</value>
+  </data>
+  <data name="YouHaveConflictedTags" xml:space="preserve">
+    <value>У вас есть теги с конфликтами:</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="RejectAll" xml:space="preserve">
+    <value>Отклонить все</value>
+  </data>
+  <data name="InputValueHint" xml:space="preserve">
+    <value>Введите ваше значение для разрешения конфликта</value>
+  </data>
+  <data name="DeleteCover" xml:space="preserve">
+    <value>Удалить обложку</value>
+  </data>
+  <data name="SetFromClipboard" xml:space="preserve">
+    <value>Задать обложку из буфера обмена</value>
+  </data>
+  <data name="SetFromFile" xml:space="preserve">
+    <value>Задать обложку из файла…</value>
+  </data>
+  <data name="SelectPath" xml:space="preserve">
+    <value>Выберите путь</value>
+  </data>
 </root>

@@ -57,7 +57,7 @@
 					<ColumnDefinition Width="120"/>
 				</Grid.ColumnDefinitions>
 				<ProgressBar ShowProgressText="{Binding AutoTagger.IsRunning}"
-							 ProgressTextFormat="{}{0}/{3} • {1}%"
+							 ProgressTextFormat="{}{0}/{3} • {1:#.##}%"
 							 Value="{Binding AutoTagger.ProcessedCount}"
 							 Maximum="{Binding AutoTagger.TotalCount}"
 							 Margin="5"
@@ -77,6 +77,7 @@
 						IsVisible="{Binding AutoTagger.HasConflicts}"
 						IsEnabled="{Binding AutoTagger.IsFinished}"
 						Content="{x:Static lang:Resources.ResolveConflicts}"
+						Click="OnResolveConflictsClick"
 						VerticalAlignment="Center"
 						ToolTip.Tip="{x:Static lang:Resources.ConflictsTip}"
 						Background="#9E5FAA"/>

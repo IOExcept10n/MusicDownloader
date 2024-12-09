@@ -1,6 +1,7 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Logging;
@@ -47,9 +48,7 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.LyricsProviders
             }
             catch (Exception ex)
             {
-                Logger.TryGet(LogEventLevel.Warning, Category)
-                    .GetValueOrDefault()
-                    .Log(this, "Can't load the lyrics from the following provider. Unhandled exception: {exception}", ex);
+                Debug.WriteLine($"Can't load the lyrics from the following provider. Unhandled exception: {ex.Message}.");
             }
 
             return null;

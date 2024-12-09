@@ -347,4 +347,34 @@
   <data name="GithubReference" xml:space="preserve">
     <value>Project repo: https://github.com/IOExcept10n/MusicDownloader</value>
   </data>
+  <data name="ConflictsWindow" xml:space="preserve">
+    <value>Resolve conflicts</value>
+  </data>
+  <data name="YouHaveConflictedTags" xml:space="preserve">
+    <value>You have conflicted tags:</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="RejectAll" xml:space="preserve">
+    <value>Reject All</value>
+  </data>
+  <data name="InputValueHint" xml:space="preserve">
+    <value>Input your value to resolve conflict</value>
+  </data>
+  <data name="DeleteCover" xml:space="preserve">
+    <value>Delete cover</value>
+  </data>
+  <data name="SetFromClipboard" xml:space="preserve">
+    <value>Set cover from clipboard</value>
+  </data>
+  <data name="SetFromFile" xml:space="preserve">
+    <value>Set cover from file…</value>
+  </data>
+  <data name="SelectPath" xml:space="preserve">
+    <value>Select path</value>
+  </data>
 </root>

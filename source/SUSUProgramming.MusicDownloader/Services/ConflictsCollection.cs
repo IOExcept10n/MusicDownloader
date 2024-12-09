@@ -8,7 +8,7 @@ namespace SUSUProgramming.MusicDownloader.Services
     /// <summary>
     /// Represents a collection of tagging conflicts.
     /// </summary>
-    internal class ConflictsCollection : KeyedCollection<string, TaggingConflictInfo>
+    public class ConflictsCollection : KeyedCollection<string, TaggingConflictInfo>
     {
         /// <summary>
         /// Tries to automatically resolve the conflict.

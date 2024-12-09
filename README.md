@@ -1,6 +1,6 @@
 # MusicDownloader
 
-![License](https://img.shields.io/badge/license-MIT-blue) ![Version](https://img.shields.io/badge/version-1.0.4-blue)
+![License](https://img.shields.io/badge/license-MIT-blue) ![Version](https://img.shields.io/badge/version-1.1.0-blue)
 
 ## Description
 MusicDownloader is a desktop application designed to help users organize their local media library. It allows users to edit track metadata, group tracks, and download them from VK Music. The application simplifies library management by visualizing data about track tag coverage, indicating when tracks require additional tags, and scanning specified locations for all tracks. It can also automatically tag tracks based on online sources such as LastFM and Genius.
@@ -73,7 +73,6 @@ Here's the file format to use:
             "ApiKey": "<Your Last.FM API key>",
             "SharedSecret": "<Your Last.FM API shared secret>",
         },
-        /* For now, Genius API is under development, it'll be ready in the next update.*/
         "Genius": { 
             "Token": "<Your Genius API access token>",
         }

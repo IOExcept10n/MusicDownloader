@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SUSUProgramming.MusicDownloader.Music;
@@ -10,11 +12,12 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
     /// <summary>
     /// Represents a view-model for tagging purposes.
     /// </summary>
-    /// <param name="tagger">An instance of the tagging service to use.</param>
-    /// <param name="settings">An instance of the program settings to use.</param>
     [Singleton]
-    internal partial class AutoTaggingViewModel(TagService tagger, AppConfig settings) : ViewModelBase
+    internal partial class AutoTaggingViewModel : ViewModelBase
     {
+        private readonly TagService tagger;
+        private readonly AppConfig settings;
+
         [ObservableProperty]
         private int processedCount;
         [ObservableProperty]
@@ -26,6 +29,18 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private bool isRunning;
         [ObservableProperty]
         private bool isFinished;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoTaggingViewModel"/> class.
+        /// </summary>
+        /// <param name="tagger">An instance of the tagging service to use.</param>
+        /// <param name="settings">An instance of the program settings to use.</param>
+        public AutoTaggingViewModel(TagService tagger, AppConfig settings)
+        {
+            this.tagger = tagger;
+            this.settings = settings;
+            conflicts.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasConflicts));
+        }
 
         /// <summary>
         /// Gets a value indicating whether the controls should be locked until tagging ended.
@@ -80,8 +95,9 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                     OnPropertyChanged(nameof(HasConflicts));
                     ProcessedCount++;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine($"Tagging error: {ex}");
                     vm.State = TrackProcessingState.Fault;
                 }
 

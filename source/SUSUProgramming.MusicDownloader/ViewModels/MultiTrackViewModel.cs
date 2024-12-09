@@ -1,10 +1,17 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Collections;
 using SUSUProgramming.MusicDownloader.Music;
 
@@ -248,6 +255,63 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             {
                 track.Save();
             }
+        }
+
+        /// <summary>
+        /// Deletes cover from all selected tracks.
+        /// </summary>
+        public void DeleteCover()
+        {
+            foreach (var track in SelectedTracks)
+            {
+                track.CoverUrl = null;
+            }
+
+            OnPropertyChanged(nameof(CommonTrackCover));
+        }
+
+        /// <summary>
+        /// Sets cover from the clipboard.
+        /// </summary>
+        /// <returns>Task to wait for.</returns>
+        public async Task SetCoverFromClipboardAsync()
+        {
+            var clipboard = App.GetClipboard();
+            if (clipboard == null)
+                return;
+            string? text = await clipboard.GetTextAsync();
+            if (text != null)
+            {
+                if (Uri.IsWellFormedUriString(text, UriKind.Absolute))
+                {
+                    await SetCoverFromFileAsync(new(text));
+                }
+            }
+            else
+            {
+                var file = ((await clipboard.GetDataAsync("Files") as IEnumerable<IStorageItem>) ?? []).FirstOrDefault();
+                if (file != null)
+                {
+                    await SetCoverFromFileAsync(file.Path);
+                }
+            }
+
+            OnPropertyChanged(nameof(CommonTrackCover));
+        }
+
+        /// <summary>
+        /// Sets new cover from the file.
+        /// </summary>
+        /// <param name="path">Path to the file or <see cref="Uri"/> to the online resource to download.</param>
+        /// <returns>Task to wait for.</returns>
+        public async Task SetCoverFromFileAsync(Uri path)
+        {
+            foreach (var track in SelectedTracks)
+            {
+                await track.SetNewCoverAsync(path);
+            }
+
+            OnPropertyChanged(nameof(CommonTrackCover));
         }
 
         private T? GetValue<T>(Func<TrackViewModel, T> getter) => SelectedTracks.Select(getter).Distinct().SingleNoExcept();

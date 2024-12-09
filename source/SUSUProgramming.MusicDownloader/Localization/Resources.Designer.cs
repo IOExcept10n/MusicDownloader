@@ -79,6 +79,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string Approve {
+            get {
+                return ResourceManager.GetString("Approve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to To use online services, you should authorize an app. Would you like to?.
         /// </summary>
         public static string AuthConfirmation {
@@ -160,11 +169,29 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resolve conflicts.
+        /// </summary>
+        public static string ConflictsWindow {
+            get {
+                return ResourceManager.GetString("ConflictsWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copyright © 2024 IOExcept10n. For contacts write via Telegram: t.me/ioexcept10n. This release is not for sale..
         /// </summary>
         public static string Copyright {
             get {
                 return ResourceManager.GetString("Copyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete cover.
+        /// </summary>
+        public static string DeleteCover {
+            get {
+                return ResourceManager.GetString("DeleteCover", resourceCulture);
             }
         }
         
@@ -255,6 +282,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string InputQuery {
             get {
                 return ResourceManager.GetString("InputQuery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input your value to resolve conflict.
+        /// </summary>
+        public static string InputValueHint {
+            get {
+                return ResourceManager.GetString("InputValueHint", resourceCulture);
             }
         }
         
@@ -457,6 +493,24 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reject.
+        /// </summary>
+        public static string Reject {
+            get {
+                return ResourceManager.GetString("Reject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reject All.
+        /// </summary>
+        public static string RejectAll {
+            get {
+                return ResourceManager.GetString("RejectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {
@@ -520,11 +574,38 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select path.
+        /// </summary>
+        public static string SelectPath {
+            get {
+                return ResourceManager.GetString("SelectPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select path to move tracks to..
         /// </summary>
         public static string SelectPathTip {
             get {
                 return ResourceManager.GetString("SelectPathTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set cover from clipboard.
+        /// </summary>
+        public static string SetFromClipboard {
+            get {
+                return ResourceManager.GetString("SetFromClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set cover from file….
+        /// </summary>
+        public static string SetFromFile {
+            get {
+                return ResourceManager.GetString("SetFromFile", resourceCulture);
             }
         }
         
@@ -732,6 +813,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string VKAuthorizationLabel {
             get {
                 return ResourceManager.GetString("VKAuthorizationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have conflicted tags:.
+        /// </summary>
+        public static string YouHaveConflictedTags {
+            get {
+                return ResourceManager.GetString("YouHaveConflictedTags", resourceCulture);
             }
         }
     }
