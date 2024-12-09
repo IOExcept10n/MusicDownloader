@@ -2,7 +2,10 @@
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Music;
@@ -111,7 +114,7 @@ public partial class MyTracksView : UserControl
 
     private async void OnFindTracksClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (DataContext is not UnsortedTracksViewModel vm)
+        if (DataContext is not MyTracksViewModel vm)
             return;
         var libraryVM = App.Services.GetRequiredService<LibraryViewModel>();
         await vm.AutoTagger.TagSelectedAsync(libraryVM.SelectedTracks);
@@ -136,9 +139,9 @@ public partial class MyTracksView : UserControl
 
     private void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (DataContext is not UnsortedTracksViewModel vm)
+        if (DataContext is not MyTracksViewModel vm)
             return;
-        foreach (var track in vm.UnsortedTracks)
+        foreach (var track in vm.Tracks)
         {
             track.ResetState();
             track.Refresh();
@@ -158,5 +161,30 @@ public partial class MyTracksView : UserControl
     private void ToggleButton_Unchecked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         TracksList.UnselectAll();
+    }
+
+    private async void OnResolveConflictsClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is not MyTracksViewModel vm)
+            return;
+        var resolver = new ConflictsResolveWindow(vm.AutoTagger.Conflicts);
+        var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (window == null)
+            return;
+        await resolver.ShowDialog(window);
+
+        // Remove all resolved and rejected conflicts.
+        for (int i = 0; i < vm.AutoTagger.Conflicts.Count; i++)
+        {
+            var conflict = vm.AutoTagger.Conflicts[i];
+            if (!conflict.IsIndeterminate)
+            {
+                vm.AutoTagger.Conflicts.RemoveAt(i--);
+            }
+
+            var trackVM = vm.Tracks.FirstOrDefault(x => x.Model == conflict.Track);
+            trackVM?.Refresh();
+            trackVM?.ResetState();
+        }
     }
 }

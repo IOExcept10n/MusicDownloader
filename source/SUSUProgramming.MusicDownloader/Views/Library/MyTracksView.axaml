@@ -57,7 +57,7 @@
 					<ColumnDefinition Width="120"/>
 				</Grid.ColumnDefinitions>
 				<ProgressBar ShowProgressText="{Binding AutoTagger.IsRunning}"
-							 ProgressTextFormat="{}{0}/{3} • {1}%"
+							 ProgressTextFormat="{}{0}/{3} • {1:#.##}%"
 							 Value="{Binding AutoTagger.ProcessedCount}"
 							 Maximum="{Binding AutoTagger.TotalCount}"
 							 Margin="5"
@@ -79,6 +79,7 @@
 						Content="{x:Static lang:Resources.ResolveConflicts}"
 						VerticalAlignment="Center"
 						ToolTip.Tip="{x:Static lang:Resources.ConflictsTip}"
+						Click="OnResolveConflictsClick"
 						Background="#9E5FAA"/>
 			</Grid>
 			<Button Name="RefreshButton"

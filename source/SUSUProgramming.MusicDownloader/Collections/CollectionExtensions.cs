@@ -113,5 +113,92 @@ namespace SUSUProgramming.MusicDownloader.Collections
 
             return -1;
         }
+
+        /// <summary>
+        /// Searches for the specified value in a sorted read-only list and returns the zero-based index of its occurrence.
+        /// This method uses the default comparer for the type <typeparamref name="T"/>.
+        /// If the value is not found, it returns the bitwise complement of the index of the first element that is greater than the value.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the <paramref name="list"/>, which must implement <see cref="IComparable{T}"/>.</typeparam>
+        /// <param name="list">The read-only list to search.</param>
+        /// <param name="value">The value to locate in the <paramref name="list"/>.</param>
+        /// <returns>
+        /// The zero-based index of the value in the <paramref name="list"/> if found; otherwise, the bitwise complement of the index of the first element that is greater than the value.
+        /// If the value is greater than all elements, returns the bitwise complement of (<paramref name="list"/>.Count).
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="list"/> is null.</exception>
+        public static int BinarySearch<T>(this IReadOnlyList<T> list, T value)
+            where T : IComparable<T>
+        {
+            ArgumentNullException.ThrowIfNull(list);
+
+            int low = 0;
+            int high = list.Count - 1;
+
+            while (low <= high)
+            {
+                int mid = low + ((high - low) >> 1);
+                int comparison = list[mid].CompareTo(value);
+
+                if (comparison == 0)
+                {
+                    return mid;
+                }
+                else if (comparison < 0)
+                {
+                    low = mid + 1;
+                }
+                else
+                {
+                    high = mid - 1;
+                }
+            }
+
+            return ~low;
+        }
+
+        /// <summary>
+        /// Searches for the specified value in a sorted read-only list and returns the zero-based index of its occurrence.
+        /// This method uses the specified <see cref="IComparer{T}"/> to compare values.
+        /// If the value is not found, it returns the bitwise complement of the index of the first element that is greater than the value.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the <paramref name="list"/>.</typeparam>
+        /// <param name="list">The read-only list to search.</param>
+        /// <param name="value">The value to locate in the <paramref name="list"/>.</param>
+        /// <param name="comparer">The <see cref="IComparer{T}"/> to compare values.</param>
+        /// <returns>
+        /// The zero-based index of the value in the <paramref name="list"/> if found; otherwise, the bitwise complement of the index of the first element that is greater than the value.
+        /// If the value is greater than all elements, returns the bitwise complement of (<paramref name="list"/>.Count).
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="list"/> or <paramref name="comparer"/> is null.</exception>
+        public static int BinarySearch<T>(this IReadOnlyList<T> list, T value, IComparer<T> comparer)
+        {
+            ArgumentNullException.ThrowIfNull(list);
+            ArgumentNullException.ThrowIfNull(comparer);
+
+            int low = 0;
+            int high = list.Count - 1;
+
+            while (low <= high)
+            {
+                int mid = low + ((high - low) >> 1);
+                int comparison = comparer.Compare(list[mid], value);
+
+                if (comparison == 0)
+                {
+                    return mid;
+                }
+                else if (comparison < 0)
+                {
+                    low = mid + 1;
+                }
+                else
+                {
+                    high = mid - 1;
+                }
+            }
+
+            return ~low;
+        }
     }
 }

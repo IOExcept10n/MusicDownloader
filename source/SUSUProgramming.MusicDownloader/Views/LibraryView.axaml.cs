@@ -37,8 +37,12 @@ public sealed partial class LibraryView : UserControl, IDisposable
     /// <inheritdoc/>
     protected override async void OnLoaded(RoutedEventArgs e)
     {
-        var library = App.Services.GetRequiredService<MediaLibrary>();
-        await library.ScanAsync();
+        if (!Design.IsDesignMode)
+        {
+            var library = App.Services.GetRequiredService<MediaLibrary>();
+            await library.ScanAsync();
+        }
+
         base.OnLoaded(e);
     }
 
@@ -78,5 +82,45 @@ public sealed partial class LibraryView : UserControl, IDisposable
         if (library == null)
             return;
         library.SelectedTracks.Clear();
+    }
+
+    private async void OnCoverFromClipboardSelected(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not LibraryViewModel library)
+            return;
+        await library.EditingModel.SetCoverFromClipboardAsync();
+    }
+
+    private async void OnCoverFromFileSelected(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not LibraryViewModel library)
+            return;
+        var topLevel = TopLevel.GetTopLevel(this);
+
+        ArgumentNullException.ThrowIfNull(topLevel, nameof(topLevel));
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new()
+        {
+            AllowMultiple = false,
+            Title = Localization.Resources.SelectPath,
+        });
+
+        if (files.Count >= 1)
+        {
+            string path = files[0].Path.LocalPath;
+            if (!path.StartsWith("http") && !path.StartsWith("file"))
+            {
+                path = "file:///" + path;
+            }
+
+            await library.EditingModel.SetCoverFromFileAsync(new(path));
+        }
+    }
+
+    private void OnDeleteCoverSelected(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not LibraryViewModel library)
+            return;
+        library.EditingModel.DeleteCover();
     }
 }

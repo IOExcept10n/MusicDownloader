@@ -76,7 +76,7 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.ID3
                                 !(Value is string s && string.IsNullOrWhiteSpace(s));
 
         /// <inheritdoc/>
-        object? ITag.Value { get => Value; set => Value = (T)(value ?? ThrowHelper.ThrowArgumentNullException<T>(nameof(value))); }
+        object? ITag.Value { get => Value; set => Value = (T)(Convert.ChangeType(value, typeof(T)) ?? ThrowHelper.ThrowArgumentNullException<T>(nameof(value))); }
 
         /// <summary>
         /// Creates new tag based on specified prototype and given value.

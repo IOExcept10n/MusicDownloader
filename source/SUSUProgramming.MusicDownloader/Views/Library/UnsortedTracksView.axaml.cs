@@ -2,7 +2,10 @@
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Music;
@@ -135,5 +138,30 @@ public partial class UnsortedTracksView : UserControl
     private void OnShowClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         ShowSelected();
+    }
+
+    private async void OnResolveConflictsClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is not UnsortedTracksViewModel vm)
+            return;
+        var resolver = new ConflictsResolveWindow(vm.AutoTagger.Conflicts);
+        var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (window == null)
+            return;
+        await resolver.ShowDialog(window);
+
+        // Remove all resolved and rejected conflicts.
+        for (int i = 0; i < vm.AutoTagger.Conflicts.Count; i++)
+        {
+            var conflict = vm.AutoTagger.Conflicts[i];
+            if (!conflict.IsIndeterminate)
+            {
+                vm.AutoTagger.Conflicts.RemoveAt(i--);
+            }
+
+            var trackVM = vm.UnsortedTracks.FirstOrDefault(x => x.Model == conflict.Track);
+            trackVM?.Refresh();
+            trackVM?.ResetState();
+        }
     }
 }

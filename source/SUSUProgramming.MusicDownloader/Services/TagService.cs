@@ -2,6 +2,7 @@
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Music;
@@ -60,7 +61,10 @@ namespace SUSUProgramming.MusicDownloader.Services
             // Step 1: search for details:
             foreach (var provider in DetailsProviders)
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 var details = await provider.SearchTrackDetailsAsync(track);
+                sw.Stop();
+                Debug.WriteLine($"Metadata ({provider.GetType().Name}): {sw.Elapsed}.");
                 if (details == null) continue;
                 foreach (var tag in details)
                 {
@@ -69,14 +73,17 @@ namespace SUSUProgramming.MusicDownloader.Services
                         conflicts.Add(conflict = new(track, [], tag.Name));
                     }
 
-                    conflict.FoundData.Add(tag);
+                    conflict.Accumulate(tag);
                 }
             }
 
             // Step 2: search for lyrics
             foreach (var provider in LyricsProviders)
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 string? lyrics = await provider.SearchLyricsAsync(track);
+                sw.Stop();
+                Debug.WriteLine($"Lyrics ({provider.GetType().Name}): {sw.Elapsed}.");
                 if (lyrics == null) continue;
                 var lyricsTag = Tags.Lyrics + lyrics;
                 if (!conflicts.TryGetValue(lyricsTag.Name, out var conflict))
@@ -84,7 +91,7 @@ namespace SUSUProgramming.MusicDownloader.Services
                     conflicts.Add(conflict = new(track, [], lyricsTag.Name));
                 }
 
-                conflict.FoundData.Add(lyricsTag);
+                conflict.Accumulate(lyricsTag);
             }
 
             var result = conflicts.AutoResolve();

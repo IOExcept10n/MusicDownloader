@@ -4,7 +4,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -68,7 +72,7 @@ namespace SUSUProgramming.MusicDownloader.Services
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings1.json", optional: true, reloadOnChange: true);
             var config = builder.Build();
             var settings = AppConfig.LoadOrInitialize(config["SettingsPath"] ?? ".config");
             services.AddSingleton<IConfiguration>(config)

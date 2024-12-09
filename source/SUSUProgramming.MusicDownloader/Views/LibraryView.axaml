@@ -142,7 +142,7 @@
 									 HorizontalAlignment="Stretch"/>
 						</Grid>
 						<!--Lyrics-->
-						<Grid ColumnDefinitions="125,*" RowDefinitions="40,160">
+						<Grid ColumnDefinitions="125,*" RowDefinitions="40,Auto">
 							<TextBlock Text="{x:Static lang:Resources.TrackLyrics}"
 										VerticalAlignment="Center"
 										HorizontalAlignment="Center"
@@ -162,7 +162,7 @@
 									 TextWrapping="Wrap"
 									 ScrollViewer.VerticalScrollBarVisibility="Auto"
 									 HorizontalAlignment="Stretch"
-									 VerticalAlignment="Stretch"/>
+									 VerticalAlignment="Top"/>
 						</Grid>
 						<!--Subtitle-->
 						<Grid ColumnDefinitions="120,*">
@@ -217,7 +217,18 @@
 			<cc:RoundedImage Source="{Binding CommonTrackCover}"
 							 CornerRadius="15"
 							 Grid.Row="3"
-							 Margin="5"/>
+							 Margin="5">
+				<cc:RoundedImage.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="{x:Static lang:Resources.SetFromClipboard}"
+								  Click="OnCoverFromClipboardSelected"/>
+						<MenuItem Header="{x:Static lang:Resources.SetFromFile}"
+								  Click="OnCoverFromFileSelected"/>
+						<MenuItem Header="{x:Static lang:Resources.DeleteCover}"
+								  Click="OnDeleteCoverSelected"/>
+					</ContextMenu>
+				</cc:RoundedImage.ContextMenu>
+			</cc:RoundedImage>
 			<!--Save button-->
 			<Button Grid.Row="4"
 					Margin="10 0"

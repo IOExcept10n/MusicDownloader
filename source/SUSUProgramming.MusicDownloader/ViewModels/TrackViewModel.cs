@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -127,25 +128,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             get => track.CoverUri;
             set
             {
-                if (value == CoverTag.InternalImagesURI)
-                    return;
-                if (value == null)
-                {
-                    if (track.TryGetValue(nameof(CoverTag.Cover), out var cover))
-                        track.Remove(cover);
-                    return;
-                }
-
-                // Blocking wait for cover download; consider refactoring to avoid blocking.
-                var http = App.Services.GetRequiredService<ApiHelper>().Client;
-                if (!track.HasCover)
-                {
-                    track.Add(CoverTag.DownloadCoverAsync(value!, http).Result!);
-                }
-                else
-                {
-                    ((CoverTag)track[nameof(CoverTag.Cover)]).UpdateCoverAsync(value, http).Wait();
-                }
+                // Blocking wait :)
+                SetNewCoverAsync(value).Wait();
             }
         }
 
@@ -314,6 +298,33 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public void Save()
         {
             MetadataManager.SaveMetadata(Model);
+        }
+
+        /// <summary>
+        /// Sets new cover to current track.
+        /// </summary>
+        /// <param name="value">Value to set.</param>
+        /// <returns>Task to wait for.</returns>
+        internal async Task SetNewCoverAsync(Uri? value)
+        {
+            if (value == CoverTag.InternalImagesURI)
+                return;
+            if (value == null)
+            {
+                if (track.TryGetValue(nameof(CoverTag.Cover), out var cover))
+                    track.Remove(cover);
+                return;
+            }
+
+            var http = App.Services.GetRequiredService<ApiHelper>().Client;
+            if (!track.HasCover)
+            {
+                track.Add((await CoverTag.DownloadCoverAsync(value!, http))!);
+            }
+            else
+            {
+                await ((CoverTag)track[nameof(CoverTag.Cover)]).UpdateCoverAsync(value, http);
+            }
         }
 
         /// <inheritdoc/>

@@ -1,7 +1,10 @@
 // Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using SUSUProgramming.MusicDownloader.ViewModels;
 
 namespace SUSUProgramming.MusicDownloader.Views;
 
@@ -75,6 +78,25 @@ public partial class EditPathWindow : Window
         if (e.Key == Avalonia.Input.Key.Enter)
         {
             OnSave();
+        }
+    }
+
+    private async void OnPathSelectClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var topLevel = GetTopLevel(this);
+
+        ArgumentNullException.ThrowIfNull(topLevel, nameof(topLevel));
+
+        var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new()
+        {
+            AllowMultiple = false,
+            Title = Localization.Resources.SelectPath,
+        });
+
+        if (folders.Count >= 1)
+        {
+            string path = folders[0].Path.LocalPath;
+            PathTextBox.Text = path;
         }
     }
 }
