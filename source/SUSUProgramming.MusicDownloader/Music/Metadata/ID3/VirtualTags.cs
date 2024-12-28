@@ -41,6 +41,11 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.ID3
         public static VirtualTag<bool> HasCover => new(nameof(HasCover));
 
         /// <summary>
+        /// Gets number of track listeners in <a href="https://last.fm">Last.FM</a> service.
+        /// </summary>
+        public static VirtualTag<int> ListenersCount => new(nameof(ListenersCount));
+
+        /// <summary>
         /// Gets a list of all virtual tags defined in this class.
         /// </summary>
         public static List<VirtualTag> AllTags =>

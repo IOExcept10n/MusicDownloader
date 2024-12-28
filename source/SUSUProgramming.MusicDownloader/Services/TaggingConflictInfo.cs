@@ -114,6 +114,7 @@ namespace SUSUProgramming.MusicDownloader.Services
             // For now, state for resolved tracks is unknown because some values can be missing.
             // However, values can be complete as well.
             Track.SetTag(nameof(VirtualTags.State), TrackProcessingState.Unknown);
+            MetadataManager.SaveMetadata(Track);
             ResolveState = ConflictResolveState.Resolved;
             Resolved?.Invoke(this, EventArgs.Empty);
         }
@@ -145,6 +146,7 @@ namespace SUSUProgramming.MusicDownloader.Services
             // For now, state for resolved tracks is unknown because some values can be missing.
             // However, values can be complete as well.
             Track.SetTag(nameof(VirtualTags.State), TrackProcessingState.Unknown);
+            MetadataManager.SaveMetadata(Track);
             ResolveState = ConflictResolveState.Resolved;
             Resolved?.Invoke(this, EventArgs.Empty);
         }

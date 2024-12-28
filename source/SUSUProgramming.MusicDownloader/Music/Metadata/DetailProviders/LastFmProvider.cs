@@ -71,5 +71,37 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
 
             return null;
         }
+
+        /// <summary>
+        /// Gets count of track listeners if available.
+        /// </summary>
+        /// <param name="details">Track details to search for listeners count.</param>
+        /// <returns>Count of listeners, <see langword="-1"/> if track is not found or <see langword="null"/> if API is unavailable.</returns>
+        public async Task<int?> GetListensCountAsync(TrackDetails details)
+        {
+            try
+            {
+                if (client.Auth.ApiKey == null)
+                    return null;
+                string? title = details.FormedTitle;
+                if (title == TrackDetails.UnknownTitle)
+                    return null;
+                string artist = details.FormedArtistString;
+                if (artist == TrackDetails.UnknownArtist)
+                    return null;
+                var info = await client.Track.GetInfoAsync(title, artist);
+                if (info.Success)
+                {
+                    var track = info.Content;
+                    return track.PlayCount;
+                }
+
+                return -1;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

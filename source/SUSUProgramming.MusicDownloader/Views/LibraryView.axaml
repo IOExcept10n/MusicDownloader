@@ -28,7 +28,7 @@
 		<Grid Grid.Column="2"
 			  DataContext="{Binding EditingModel}"
 			  x:DataType="vm:MultiTrackViewModel"
-			  RowDefinitions="2*,Auto,30,*,50">
+			  RowDefinitions="2*,Auto,*">
 			<ScrollViewer HorizontalScrollBarVisibility="Disabled">
 				<Border Padding="5">
 						<StackPanel Orientation="Vertical" Spacing="5">
@@ -210,35 +210,37 @@
 			</ScrollViewer>
 			<GridSplitter Height="3" Grid.Row="1"/>
 			<!--Cover-->
-			<TextBlock Text="{x:Static lang:Resources.TrackCover}"
+			<Grid Grid.Row="2" RowDefinitions="30,*,50">
+				<TextBlock Text="{x:Static lang:Resources.TrackCover}"
 					   VerticalAlignment="Center"
 					   HorizontalAlignment="Center"
-					   Grid.Row="2"/>
-			<cc:RoundedImage Source="{Binding CommonTrackCover}"
-							 CornerRadius="15"
-							 Grid.Row="3"
-							 Margin="5">
-				<cc:RoundedImage.ContextMenu>
-					<ContextMenu>
-						<MenuItem Header="{x:Static lang:Resources.SetFromClipboard}"
-								  Click="OnCoverFromClipboardSelected"/>
-						<MenuItem Header="{x:Static lang:Resources.SetFromFile}"
-								  Click="OnCoverFromFileSelected"/>
-						<MenuItem Header="{x:Static lang:Resources.DeleteCover}"
-								  Click="OnDeleteCoverSelected"/>
-					</ContextMenu>
-				</cc:RoundedImage.ContextMenu>
-			</cc:RoundedImage>
-			<!--Save button-->
-			<Button Grid.Row="4"
-					Margin="10 0"
-					HorizontalContentAlignment="Center"
-					VerticalContentAlignment="Center"
-					HorizontalAlignment="Stretch"
-					Content="{x:Static lang:Resources.Save}"
-					Background="#7798ff98"
-					Click="OnSaveClick"
-					Name="SaveButton"/>
+					   Grid.Row="0"/>
+				<cc:RoundedImage Source="{Binding CommonTrackCover}"
+								 CornerRadius="15"
+								 Grid.Row="1"
+								 Margin="5">
+					<cc:RoundedImage.ContextMenu>
+						<ContextMenu>
+							<MenuItem Header="{x:Static lang:Resources.SetFromClipboard}"
+									  Click="OnCoverFromClipboardSelected"/>
+							<MenuItem Header="{x:Static lang:Resources.SetFromFile}"
+									  Click="OnCoverFromFileSelected"/>
+							<MenuItem Header="{x:Static lang:Resources.DeleteCover}"
+									  Click="OnDeleteCoverSelected"/>
+						</ContextMenu>
+					</cc:RoundedImage.ContextMenu>
+				</cc:RoundedImage>
+				<!--Save button-->
+				<Button Grid.Row="2"
+						Margin="10 0"
+						HorizontalContentAlignment="Center"
+						VerticalContentAlignment="Center"
+						HorizontalAlignment="Stretch"
+						Content="{x:Static lang:Resources.Save}"
+						Background="#7798ff98"
+						Click="OnSaveClick"
+						Name="SaveButton"/>
+			</Grid>
 		</Grid>
 		<Grid Grid.Column="2" 
 			  DataContext="{Binding EditingModel}"

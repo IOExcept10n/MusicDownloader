@@ -9,13 +9,59 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using SUSUProgramming.MusicDownloader.Localization;
 using SUSUProgramming.MusicDownloader.Music;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
+using SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
 
 namespace SUSUProgramming.MusicDownloader.ViewModels
 {
+    /// <summary>
+    /// Defines a state of the track listening rate based on its listeners on <a href="https://last.fm">Last.FM</a>.
+    /// </summary>
+    public enum TrackListeningIndicator
+    {
+        /// <summary>
+        /// Track state is unknown due to API unavailability.
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// Track not found on <a href="https://last.fm">Last.FM</a>.
+        /// </summary>
+        NotFound,
+
+        /// <summary>
+        /// Track listeners count is less than <see langword="10"/> so its tags can be incorrect.
+        /// </summary>
+        MayBeIncorrect,
+
+        /// <summary>
+        /// Track listeners count is between <see langword="10"/> and <see langword="100"/> so it's recognized as unpopular.
+        /// </summary>
+        LowListened,
+
+        /// <summary>
+        /// Track listeners count is between <see langword="100"/> and <see langword="1000"/> so it's like common track.
+        /// </summary>
+        Common,
+
+        /// <summary>
+        /// Track listeners count is between <see langword="1000"/> and <see langword="10000"/> so it's recognized as frequently listened.
+        /// </summary>
+        FrequentlyListened,
+
+        /// <summary>
+        /// Track listeners count is more than <see langword="10000"/> so it's recognized as popular.
+        /// </summary>
+        Popular,
+    }
+
     /// <summary>
     /// Defines a state of the track processing.
     /// </summary>
@@ -76,8 +122,16 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private static readonly string[] RecommendedTags = [nameof(Album), nameof(Genres), nameof(Year), nameof(Track)];
         private static readonly string[] RequiredTags = [nameof(Title), nameof(Performers)];
         private readonly TrackDetails track;
+        private readonly DelayedNotifier listenStatusUpdater;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ListeningStateBrush))]
+        [NotifyPropertyChangedFor(nameof(ListeningStateText))]
+        private TrackListeningIndicator listeningState;
+
         private Bitmap? cover;
         private bool isCoverDirty = true;
+        private bool isListeningStateDirty = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackViewModel"/> class.
@@ -86,6 +140,13 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public TrackViewModel(TrackDetails track)
         {
             this.track = track;
+            listenStatusUpdater = new(
+                async (t) =>
+                {
+                    t.ThrowIfCancellationRequested();
+                    await Dispatcher.UIThread.AwaitWithPriority(UpdateListeningState(), DispatcherPriority.Background);
+                },
+                1000);
             track.PropertyChanged += OnTrackUpdated;
             track.CollectionChanged += OnTrackTagsUpdated;
             ResetState();
@@ -163,6 +224,26 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         }
 
         /// <summary>
+        /// Gets indication text for the current listening state.
+        /// </summary>
+        public string ListeningStateText => Resources.ResourceManager.GetString(ListeningState.ToString()) ?? "Unknown";
+
+        /// <summary>
+        /// Gets a brush for the current track listening indication.
+        /// </summary>
+        public SolidColorBrush ListeningStateBrush => new(ListeningState switch
+        {
+            TrackListeningIndicator.Unknown => Colors.Gray,
+            TrackListeningIndicator.NotFound => Colors.Red,
+            TrackListeningIndicator.MayBeIncorrect => Colors.Orange,
+            TrackListeningIndicator.LowListened => Colors.Yellow,
+            TrackListeningIndicator.Common => Colors.Green,
+            TrackListeningIndicator.FrequentlyListened => Colors.BlueViolet,
+            TrackListeningIndicator.Popular => Colors.DeepPink,
+            _ => Colors.White,
+        });
+
+        /// <summary>
         /// Gets or sets the lyrics of the track.
         /// </summary>
         public string? Lyrics { get => Read<string>(); set => Update(value); }
@@ -207,6 +288,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             TrackProcessingState.Fault => Colors.Red,
             _ => Colors.Violet,
         });
+
+        /// <summary>
+        /// Gets a string for the track processing state.
+        /// </summary>
+        public string ProcessingStateText => Resources.ResourceManager.GetString(State.ToString()) ?? "Unknown";
 
         /// <summary>
         /// Gets or sets the processing state of the track.
@@ -277,6 +363,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         /// </summary>
         public void ResetState()
         {
+            listenStatusUpdater.NotifyUpdate();
             if (RequiredTags.All(track.Contains))
             {
                 if (RecommendedTags.All(track.Contains) && (track.Contains(nameof(VirtualTags.HasCover)) || track.Contains(nameof(CoverTag.Cover))))
@@ -340,6 +427,21 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                 OnPropertyChanged(nameof(ProcessingStateColor));
         }
 
+        private async Task UpdateListeningState()
+        {
+            // TODO: make Last.FM provider in a separate interface.
+            ListeningState = (await (App.Services.GetServices<IDetailProvider>().OfType<LastFmProvider>().FirstOrDefault()?.GetListensCountAsync(Model) ?? Task.FromResult<int?>(null))) switch
+            {
+                -1 => TrackListeningIndicator.NotFound,
+                < 500 => TrackListeningIndicator.MayBeIncorrect,
+                < 50_000 => TrackListeningIndicator.LowListened,
+                < 1_000_000 => TrackListeningIndicator.Common,
+                < 5_000_000 => TrackListeningIndicator.FrequentlyListened,
+                >= 5_000_000 => TrackListeningIndicator.Popular,
+                _ => TrackListeningIndicator.Unknown,
+            };
+        }
+
         private void OnTrackTagsUpdated(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(TagsCount));
@@ -370,8 +472,14 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             {
                 track.SetTag(callerProperty, value);
                 OnPropertyChanged(callerProperty);
-                if (callerProperty != nameof(State))
+                if (!callerProperty.Contains(nameof(State)))
+                {
                     ResetState();
+                }
+                else if (callerProperty != nameof(ProcessingStateText))
+                {
+                    OnPropertyChanged(nameof(ProcessingStateText));
+                }
             }
         }
 

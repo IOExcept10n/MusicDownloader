@@ -352,4 +352,52 @@
   <data name="SelectPath" xml:space="preserve">
     <value>Выберите путь</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Трек не найден</value>
+  </data>
+  <data name="MayBeIncorrect" xml:space="preserve">
+    <value>Возможно неверные теги</value>
+  </data>
+  <data name="LowListened" xml:space="preserve">
+    <value>Малоизвестен</value>
+  </data>
+  <data name="Common" xml:space="preserve">
+    <value>Обычный трек</value>
+  </data>
+  <data name="FrequentlyListened" xml:space="preserve">
+    <value>Часто прослушивается</value>
+  </data>
+  <data name="Popular" xml:space="preserve">
+    <value>Популярный трек</value>
+  </data>
+  <data name="Untagged" xml:space="preserve">
+    <value>Теги не установлены</value>
+  </data>
+  <data name="Incomplete" xml:space="preserve">
+    <value>Не хватает тегов</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Теги заполнены</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Обрабатывается</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Успешно обработан</value>
+  </data>
+  <data name="TagsNotFound" xml:space="preserve">
+    <value>Теги не найдены</value>
+  </data>
+  <data name="Fault" xml:space="preserve">
+    <value>Ошибка обработки</value>
+  </data>
+  <data name="Conflicting" xml:space="preserve">
+    <value>Обнаружен конфликт</value>
+  </data>
+  <data name="ListenState" xml:space="preserve">
+    <value>Статистика прослушивания</value>
+  </data>
 </root>

@@ -107,17 +107,19 @@
 		<Grid Grid.Row="1" Margin="10 0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" MinWidth="250" MaxWidth="400"/>
-				<ColumnDefinition Width="*" MinWidth="250" MaxWidth="400"/>
-				<ColumnDefinition Width="*" MinWidth="100" MaxWidth="400"/>
+				<ColumnDefinition Width="*" MinWidth="200" MaxWidth="400"/>
+				<ColumnDefinition Width="*" MinWidth="100" MaxWidth="300"/>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="50"/>
-				<ColumnDefinition Width="120"/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="200"/>
 			</Grid.ColumnDefinitions>
 			<TextBlock Grid.Column="0" Text="{x:Static lang:Resources.TrackTitle}"/>
 			<TextBlock Grid.Column="1" Text="{x:Static lang:Resources.TrackArtist}"/>
 			<TextBlock Grid.Column="2" Text="{x:Static lang:Resources.TrackAlbum}"/>
 			<TextBlock Grid.Column="4" Text="{x:Static lang:Resources.TagsCount}"/>
 			<TextBlock Grid.Column="5" Text="{x:Static lang:Resources.HandlingState}"/>
+			<TextBlock Grid.Column="6" Text="{x:Static lang:Resources.ListenState}"/>
 		</Grid>
 		<!--Tracks list-->
 		<ListBox Grid.Row="2"
@@ -138,17 +140,19 @@
 					<Grid Height="30">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*" MinWidth="250" MaxWidth="400"/>
-							<ColumnDefinition Width="*" MinWidth="250" MaxWidth="400"/>
-							<ColumnDefinition Width="*" MinWidth="100" MaxWidth="400"/>
+							<ColumnDefinition Width="*" MinWidth="200" MaxWidth="400"/>
+							<ColumnDefinition Width="*" MinWidth="100" MaxWidth="300"/>
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="50"/>
-							<ColumnDefinition Width="120"/>
+							<ColumnDefinition Width="150"/>
+							<ColumnDefinition Width="185"/> 
 						</Grid.ColumnDefinitions>
 						<TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Title}"/>
 						<TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding PerformersString}"/>
 						<TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Album}"/>
 						<TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding TagsCount}"/>
-						<TextBlock Grid.Column="5" VerticalAlignment="Center" Foreground="{Binding ProcessingStateColor}" Text="{Binding State}"/>
+						<TextBlock Grid.Column="5" VerticalAlignment="Center" Foreground="{Binding ProcessingStateColor}" Text="{Binding ProcessingStateText}"/>
+						<TextBlock Grid.Column="6" VerticalAlignment="Center" Foreground="{Binding ListeningStateBrush}" Text="{Binding ListeningStateText}"/>
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
