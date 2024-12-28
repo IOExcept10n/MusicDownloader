@@ -142,6 +142,24 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Good.
+        /// </summary>
+        public static string Common {
+            get {
+                return ResourceManager.GetString("Common", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete tags.
+        /// </summary>
+        public static string Complete {
+            get {
+                return ResourceManager.GetString("Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -156,6 +174,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string ConfirmAuth {
             get {
                 return ResourceManager.GetString("ConfirmAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conflict detected.
+        /// </summary>
+        public static string Conflicting {
+            get {
+                return ResourceManager.GetString("Conflicting", resourceCulture);
             }
         }
         
@@ -241,11 +268,29 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Processing fault.
+        /// </summary>
+        public static string Fault {
+            get {
+                return ResourceManager.GetString("Fault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Found conflicts:.
         /// </summary>
         public static string FoundConflicts {
             get {
                 return ResourceManager.GetString("FoundConflicts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frequently listened.
+        /// </summary>
+        public static string FrequentlyListened {
+            get {
+                return ResourceManager.GetString("FrequentlyListened", resourceCulture);
             }
         }
         
@@ -277,6 +322,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tags incomplete.
+        /// </summary>
+        public static string Incomplete {
+            get {
+                return ResourceManager.GetString("Incomplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input your query.
         /// </summary>
         public static string InputQuery {
@@ -304,6 +358,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Listening state.
+        /// </summary>
+        public static string ListenState {
+            get {
+                return ResourceManager.GetString("ListenState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load.
         /// </summary>
         public static string Load {
@@ -318,6 +381,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string LoginLabel {
             get {
                 return ResourceManager.GetString("LoginLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpopular.
+        /// </summary>
+        public static string LowListened {
+            get {
+                return ResourceManager.GetString("LowListened", resourceCulture);
             }
         }
         
@@ -345,6 +417,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string MarkAsUnsorted {
             get {
                 return ResourceManager.GetString("MarkAsUnsorted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maybe tag issues.
+        /// </summary>
+        public static string MayBeIncorrect {
+            get {
+                return ResourceManager.GetString("MayBeIncorrect", resourceCulture);
             }
         }
         
@@ -390,6 +471,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string MyMusic {
             get {
                 return ResourceManager.GetString("MyMusic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track not found.
+        /// </summary>
+        public static string NotFound {
+            get {
+                return ResourceManager.GetString("NotFound", resourceCulture);
             }
         }
         
@@ -457,11 +547,29 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Popular.
+        /// </summary>
+        public static string Popular {
+            get {
+                return ResourceManager.GetString("Popular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
         public static string Preferences {
             get {
                 return ResourceManager.GetString("Preferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In progress.
+        /// </summary>
+        public static string Processing {
+            get {
+                return ResourceManager.GetString("Processing", resourceCulture);
             }
         }
         
@@ -637,6 +745,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Successfully filled.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore track name.
         /// </summary>
         public static string SwitchIgnore {
@@ -651,6 +768,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string TagsCount {
             get {
                 return ResourceManager.GetString("TagsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags not found.
+        /// </summary>
+        public static string TagsNotFound {
+            get {
+                return ResourceManager.GetString("TagsNotFound", resourceCulture);
             }
         }
         
@@ -799,11 +925,29 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unsorted Tracks.
         /// </summary>
         public static string UnsortedLibraryTracks {
             get {
                 return ResourceManager.GetString("UnsortedLibraryTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tags.
+        /// </summary>
+        public static string Untagged {
+            get {
+                return ResourceManager.GetString("Untagged", resourceCulture);
             }
         }
         

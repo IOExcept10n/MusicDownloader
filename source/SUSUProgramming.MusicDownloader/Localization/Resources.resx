@@ -377,4 +377,52 @@
   <data name="SelectPath" xml:space="preserve">
     <value>Select path</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Track not found</value>
+  </data>
+  <data name="MayBeIncorrect" xml:space="preserve">
+    <value>Maybe tag issues</value>
+  </data>
+  <data name="LowListened" xml:space="preserve">
+    <value>Unpopular</value>
+  </data>
+  <data name="Common" xml:space="preserve">
+    <value>Good</value>
+  </data>
+  <data name="FrequentlyListened" xml:space="preserve">
+    <value>Frequently listened</value>
+  </data>
+  <data name="Popular" xml:space="preserve">
+    <value>Popular</value>
+  </data>
+  <data name="Untagged" xml:space="preserve">
+    <value>No tags</value>
+  </data>
+  <data name="Incomplete" xml:space="preserve">
+    <value>Tags incomplete</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete tags</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Successfully filled</value>
+  </data>
+  <data name="TagsNotFound" xml:space="preserve">
+    <value>Tags not found</value>
+  </data>
+  <data name="Fault" xml:space="preserve">
+    <value>Processing fault</value>
+  </data>
+  <data name="Conflicting" xml:space="preserve">
+    <value>Conflict detected</value>
+  </data>
+  <data name="ListenState" xml:space="preserve">
+    <value>Listening state</value>
+  </data>
 </root>
