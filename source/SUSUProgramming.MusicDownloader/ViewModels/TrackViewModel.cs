@@ -12,6 +12,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Localization;
 using SUSUProgramming.MusicDownloader.Music;
 using SUSUProgramming.MusicDownloader.Music.Metadata;
@@ -121,6 +122,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private static readonly Bitmap EmptyCover = new(AssetLoader.Open(new("avares://SUSUProgramming.MusicDownloader/Assets/music.png")));
         private static readonly string[] RecommendedTags = [nameof(Album), nameof(Genres), nameof(Year), nameof(Track)];
         private static readonly string[] RequiredTags = [nameof(Title), nameof(Performers)];
+        private static ILogger<TrackViewModel>? logger;
         private readonly TrackDetails track;
         private readonly DelayedNotifier listenStatusUpdater;
 
@@ -131,14 +133,16 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
 
         private Bitmap? cover;
         private bool isCoverDirty = true;
-        private bool isListeningStateDirty = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackViewModel"/> class.
         /// </summary>
         /// <param name="track">Track instance to use.</param>
-        public TrackViewModel(TrackDetails track)
+        /// <param name="logger">The logger to use for logging operations.</param>
+        public TrackViewModel(TrackDetails track, ILogger<TrackViewModel>? logger = null)
         {
+            TrackViewModel.logger = logger;
+            logger?.LogDebug("Initializing TrackViewModel for track: {TrackName}", track.FormedTrackName);
             this.track = track;
             listenStatusUpdater = new(
                 async (t) =>
@@ -150,6 +154,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             track.PropertyChanged += OnTrackUpdated;
             track.CollectionChanged += OnTrackTagsUpdated;
             ResetState();
+            logger?.LogDebug("TrackViewModel initialized for track: {TrackName}", track.FormedTrackName);
         }
 
         /// <summary>
@@ -249,7 +254,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public string? Lyrics { get => Read<string>(); set => Update(value); }
 
         /// <summary>
-        /// Gets the model representing the track details.
+        /// Gets the underlying track details model.
         /// </summary>
         public TrackDetails Model => track;
 
@@ -259,21 +264,21 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public string[]? Performers { get => Read<string[]>(); set => Update(value); }
 
         /// <summary>
-        /// Gets or sets the array of roles for the performers.
+        /// Gets or sets the array of performer roles associated with the track.
         /// </summary>
         public string[]? PerformersRole { get => Read<string[]>(); set => Update(value); }
 
         /// <summary>
-        /// Gets or sets a string representation of the performers, formatted as a single string.
+        /// Gets or sets a string representation of the performers, joined by commas.
         /// </summary>
         public string? PerformersString
         {
-            get => track.FormedArtistString;
+            get => Performers == null ? null : string.Join(", ", Performers);
             set => Performers = value == null ? null : TrackNameParser.GetPerformers(value);
         }
 
         /// <summary>
-        /// Gets the color representing the processing state of the track.
+        /// Gets a brush for the current processing state.
         /// </summary>
         public SolidColorBrush ProcessingStateColor => new(State switch
         {
@@ -290,12 +295,12 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         });
 
         /// <summary>
-        /// Gets a string for the track processing state.
+        /// Gets indication text for the current processing state.
         /// </summary>
         public string ProcessingStateText => Resources.ResourceManager.GetString(State.ToString()) ?? "Unknown";
 
         /// <summary>
-        /// Gets or sets the processing state of the track.
+        /// Gets or sets the current processing state of the track.
         /// </summary>
         public TrackProcessingState State { get => Read<TrackProcessingState>(); set => Update(value); }
 
@@ -305,9 +310,9 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public string? Subtitle { get => Read<string>(); set => Update(value); }
 
         /// <summary>
-        /// Gets the count of tags associated with the track, excluding virtual tags.
+        /// Gets the total number of tags associated with the track.
         /// </summary>
-        public int TagsCount => track.Count(x => x is not VirtualTag);
+        public int TagsCount => track.Count(x => x is not VirtualTag and not CoverTag) + (track.HasCover ? 1 : 0);
 
         /// <summary>
         /// Gets or sets the title of the track.
@@ -315,7 +320,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public string? Title { get => Read<string>(); set => Update(value); }
 
         /// <summary>
-        /// Gets or sets the track number within the album.
+        /// Gets or sets the track number.
         /// </summary>
         public uint Track { get => Read<uint>(); set => Update(value); }
 
@@ -325,15 +330,18 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public uint TrackCount { get => Read<uint>(); set => Update(value); }
 
         /// <summary>
-        /// Gets the cover image for the track. If the cover is marked as dirty, it will be updated.
+        /// Gets the cover image for the track.
         /// </summary>
         public Bitmap TrackCover
         {
             get
             {
                 if (isCoverDirty)
+                {
                     UpdateCover();
-                return track.HasCover ? (cover ?? EmptyCover) : EmptyCover;
+                }
+
+                return cover ?? EmptyCover;
             }
         }
 
@@ -343,10 +351,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public uint Year { get => Read<uint>(); set => Update(value); }
 
         /// <summary>
-        /// Refreshes the properties of the track by notifying property changes for required and recommended tags.
+        /// Refreshes the track details and updates the UI.
         /// </summary>
         public void Refresh()
         {
+            logger?.LogDebug("Refreshing track: {TrackName}", track.FormedTrackName);
             foreach (var property in RequiredTags)
             {
                 OnPropertyChanged(property);
@@ -356,48 +365,62 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             {
                 OnPropertyChanged(property);
             }
+
+            logger?.LogDebug("Track refreshed: {TrackName}", track.FormedTrackName);
         }
 
         /// <summary>
-        /// Resets the processing state of the track based on the presence of required and recommended tags.
+        /// Resets the track state to its initial values.
         /// </summary>
         public void ResetState()
         {
+            logger?.LogDebug("Resetting state for track: {TrackName}", track.FormedTrackName);
             listenStatusUpdater.NotifyUpdate();
             if (RequiredTags.All(track.Contains))
             {
-                if (RecommendedTags.All(track.Contains) && (track.Contains(nameof(VirtualTags.HasCover)) || track.Contains(nameof(CoverTag.Cover))))
+                if (RecommendedTags.All(track.Contains) && track.HasCover)
                 {
+                    logger?.LogDebug("Track {TrackName} is complete", track.FormedTrackName);
                     State = TrackProcessingState.Complete;
                     return;
                 }
 
+                logger?.LogDebug("Track {TrackName} is incomplete", track.FormedTrackName);
                 State = TrackProcessingState.Incomplete;
                 return;
             }
 
+            logger?.LogDebug("Track {TrackName} is untagged", track.FormedTrackName);
             State = TrackProcessingState.Untagged;
         }
 
         /// <summary>
-        /// Saves the current metadata of the track using the metadata manager.
+        /// Saves the current track details.
         /// </summary>
         public void Save()
         {
+            logger?.LogDebug("Saving track: {TrackName}", track.FormedTrackName);
             MetadataManager.SaveMetadata(Model);
+            logger?.LogDebug("Track saved: {TrackName}", track.FormedTrackName);
         }
 
         /// <summary>
-        /// Sets new cover to current track.
+        /// Sets a new cover image for the track.
         /// </summary>
-        /// <param name="value">Value to set.</param>
-        /// <returns>Task to wait for.</returns>
+        /// <param name="value">The URL of the new cover image.</param>
+        /// <returns>An asynchronous task that describes cover setting process.</returns>
         internal async Task SetNewCoverAsync(Uri? value)
         {
+            logger?.LogDebug("Setting new cover for track: {TrackName}", track.FormedTrackName);
             if (value == CoverTag.InternalImagesURI)
+            {
+                logger?.LogDebug("Using internal cover image for track: {TrackName}", track.FormedTrackName);
                 return;
+            }
+
             if (value == null)
             {
+                logger?.LogDebug("Removing cover for track: {TrackName}", track.FormedTrackName);
                 if (track.TryGetValue(nameof(CoverTag.Cover), out var cover))
                     track.Remove(cover);
                 return;
@@ -406,31 +429,50 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             var http = App.Services.GetRequiredService<ApiHelper>().Client;
             if (!track.HasCover)
             {
+                logger?.LogDebug("Downloading new cover for track: {TrackName}", track.FormedTrackName);
                 track.Add((await CoverTag.DownloadCoverAsync(value!, http))!);
             }
             else
             {
+                logger?.LogDebug("Updating existing cover for track: {TrackName}", track.FormedTrackName);
                 await ((CoverTag)track[nameof(CoverTag.Cover)]).UpdateCoverAsync(value, http);
             }
+
+            logger?.LogDebug("Cover set for track: {TrackName}", track.FormedTrackName);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Handles property change events from the track.
+        /// </summary>
+        /// <param name="e">Args for the property update.</param>
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
-            if (e.PropertyName is nameof(Performers) or nameof(Genres) or nameof(AlbumArtists))
-            {
-                OnPropertyChanged(e.PropertyName + nameof(String));
-            }
-
             if (e.PropertyName == nameof(State))
-                OnPropertyChanged(nameof(ProcessingStateColor));
+            {
+                logger?.LogDebug("Track state changed to {State} for track: {TrackName}", State, track.FormedTrackName);
+            }
         }
 
+        /// <summary>
+        /// Updates the listening state of the track.
+        /// </summary>
         private async Task UpdateListeningState()
         {
+            logger?.LogDebug("Updating listening state for track: {TrackName}", track.FormedTrackName);
+
             // TODO: make Last.FM provider in a separate interface.
-            ListeningState = (await (App.Services.GetServices<IDetailProvider>().OfType<LastFmProvider>().FirstOrDefault()?.GetListensCountAsync(Model) ?? Task.FromResult<int?>(null))) switch
+            var lastFmProvider = App.Services.GetServices<IDetailProvider>().OfType<LastFmProvider>().FirstOrDefault();
+            if (lastFmProvider == null)
+            {
+                logger?.LogWarning("Last.FM provider not found for track: {TrackName}", track.FormedTrackName);
+                ListeningState = TrackListeningIndicator.Unknown;
+                return;
+            }
+
+            var listensCount = await lastFmProvider.GetListensCountAsync(Model);
+            logger?.LogDebug("Retrieved listens count {ListensCount} for track: {TrackName}", listensCount, track.FormedTrackName);
+            ListeningState = listensCount switch
             {
                 -1 => TrackListeningIndicator.NotFound,
                 < 500 => TrackListeningIndicator.MayBeIncorrect,
@@ -440,57 +482,69 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                 >= 5_000_000 => TrackListeningIndicator.Popular,
                 _ => TrackListeningIndicator.Unknown,
             };
+            logger?.LogDebug("Updated listening state to {ListeningState} for track: {TrackName}", ListeningState, track.FormedTrackName);
         }
 
+        /// <summary>
+        /// Handles collection change events from the track.
+        /// </summary>
         private void OnTrackTagsUpdated(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            logger?.LogDebug("Track tags updated for track: {TrackName}", track.FormedTrackName);
             OnPropertyChanged(nameof(TagsCount));
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems!.OfType<CoverTag>().Any())
-            {
-                isCoverDirty = true;
-                OnPropertyChanged(nameof(TrackCover));
-            }
         }
 
+        /// <summary>
+        /// Handles property change events from the track.
+        /// </summary>
         private void OnTrackUpdated(object? sender, PropertyChangedEventArgs e)
         {
+            logger?.LogDebug("Track property {Property} updated for track: {TrackName}", e.PropertyName, track.FormedTrackName);
             OnPropertyChanged(e.PropertyName);
         }
 
+        /// <summary>
+        /// Reads a value from the track details.
+        /// </summary>
         private T? Read<T>([CallerMemberName] string? callerProperty = null)
         {
-            if (string.IsNullOrEmpty(callerProperty))
+            if (callerProperty == null)
                 return default;
-            if (track.TryGetTag<T>(callerProperty, out var tag))
-                return tag;
-            return default;
+
+            track.TryGetTag<T>(callerProperty, out var value);
+            logger?.LogTrace("Reading {Property} for track: {TrackName}, Value: {Value}", callerProperty, track.FormedTrackName, value);
+            return value;
         }
 
+        /// <summary>
+        /// Updates a value in the track details.
+        /// </summary>
         private void Update<T>(T value, [CallerMemberName] string? callerProperty = null)
         {
-            if (!string.IsNullOrEmpty(callerProperty))
-            {
-                track.SetTag(callerProperty, value);
-                OnPropertyChanged(callerProperty);
-                if (!callerProperty.Contains(nameof(State)))
-                {
-                    ResetState();
-                }
-                else if (callerProperty != nameof(ProcessingStateText))
-                {
-                    OnPropertyChanged(nameof(ProcessingStateText));
-                }
-            }
+            if (callerProperty == null)
+                return;
+
+            logger?.LogTrace("Updating {Property} for track: {TrackName}, Value: {Value}", callerProperty, track.FormedTrackName, value);
+            track.SetTag(callerProperty, value);
         }
 
+        /// <summary>
+        /// Updates the cover image for the track.
+        /// </summary>
         private void UpdateCover()
         {
+            logger?.LogDebug("Updating cover for track: {TrackName}", track.FormedTrackName);
             cover?.Dispose();
             var data = track.OfType<CoverTag>().FirstOrDefault()?.Cover?.Data;
             if (data == null)
+            {
+                logger?.LogDebug("No cover data found for track: {TrackName}", track.FormedTrackName);
                 return;
+            }
+
             using var memory = new MemoryStream(data.Data);
             cover = new Bitmap(memory);
+            logger?.LogDebug("Cover updated for track: {TrackName}", track.FormedTrackName);
         }
     }
 }

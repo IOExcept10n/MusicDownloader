@@ -51,4 +51,9 @@ public partial class ConflictsResolveWindow : Window
             return;
         value.Select();
     }
+
+    private void OnCloseClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        Close();
+    }
 }

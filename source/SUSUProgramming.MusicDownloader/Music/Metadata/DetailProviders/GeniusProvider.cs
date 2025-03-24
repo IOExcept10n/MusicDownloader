@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
 
@@ -15,15 +14,15 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
     /// Represents a metadata provider for Genius.com.
     /// </summary>
     /// <param name="api">An instance of the API helper to use.</param>
-    /// <param name="config">An instance of the app config to get api token from.</param>
-    internal partial class GeniusProvider(ApiHelper api, IConfiguration config) : TrackDetailsProvider(api, "https://api.genius.com/")
+    /// <param name="tokens">An instance of the tokens storage to get api token from.</param>
+    internal partial class GeniusProvider(ApiHelper api, TokenStorage tokens) : TrackDetailsProvider(api, "https://api.genius.com/")
     {
         private static readonly Regex LyricsDivRegex = GetLyricsDivRegex();
         private static readonly Regex TagRegex = GetTagRegex();
         private static readonly Regex MultilineRegex = GetMultilineRegex();
         private static readonly Regex MultiSpaceRegex = GetMultiSpaceRegex();
 
-        private readonly string? token = config.GetSection("Providers:Genius")["Token"];
+        private readonly string? token = tokens.GetToken("Genius");
 
         /// <inheritdoc/>
         public override async Task<TrackDetails?> SearchTrackDetailsAsync(TrackDetails prototype)

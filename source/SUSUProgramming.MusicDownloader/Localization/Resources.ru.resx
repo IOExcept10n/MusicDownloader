@@ -269,7 +269,7 @@
     <value>Разрешить обнаруженные конфликты</value>
   </data>
   <data name="RefreshTip" xml:space="preserve">
-    <value>Обновить представление с треками</value>
+    <value>Обновить</value>
   </data>
   <data name="SelectPathTip" xml:space="preserve">
     <value>Выберите путь для перемещения треков.</value>
@@ -399,5 +399,23 @@
   </data>
   <data name="ListenState" xml:space="preserve">
     <value>Статистика прослушивания</value>
+  </data>
+  <data name="ManageGenres" xml:space="preserve">
+    <value>Управление жанрами</value>
+  </data>
+  <data name="AddGenre" xml:space="preserve">
+    <value>Добавить жанр</value>
+  </data>
+  <data name="APIAuthentication" xml:space="preserve">
+    <value>API сервисы</value>
+  </data>
+  <data name="SearchWatermark" xml:space="preserve">
+    <value>🔎 Найти треки по названию или исполнителю...</value>
+  </data>
+  <data name="ManageUnsortedPath" xml:space="preserve">
+    <value>Настройка пути для неотсортированных треков</value>
+  </data>
+  <data name="UnsortedPathWatermark" xml:space="preserve">
+    <value>Укажите путь для неотсортированных треков здесь...</value>
   </data>
 </root>

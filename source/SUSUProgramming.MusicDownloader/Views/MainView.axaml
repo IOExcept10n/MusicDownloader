@@ -47,7 +47,7 @@
 									<ColumnDefinition Width="Auto"/>
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
-								<TextBlock Padding="4" TextAlignment="Center" Text="{Binding IconText}" FontFamily="Segoe Fluent Icons" FontSize="24"/>
+								<TextBlock Padding="4" TextAlignment="Center" Text="{Binding IconText}" FontFamily="{StaticResource ResourceKey=FluentIconsFont}" FontSize="24"/>
 								<TextBlock Margin="20 2" Grid.Column="1" Text="{Binding TitleText}" FontSize="20"/>
 							</Grid>
 						</DataTemplate>

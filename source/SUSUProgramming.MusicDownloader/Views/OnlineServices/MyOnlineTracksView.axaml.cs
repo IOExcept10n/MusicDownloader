@@ -86,7 +86,7 @@ public partial class MyOnlineTracksView : UserControl
 
     private void ToggleIgnored()
     {
-        if (DataContext is not OnlineLibViewModel online)
+        if (DataContext is not OnlineLibViewModel)
             return;
         var settings = App.Services.GetRequiredService<AppConfig>();
         foreach (OnlineTrackViewModel vm in TracksList.SelectedItems!)

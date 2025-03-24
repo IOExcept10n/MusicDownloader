@@ -101,7 +101,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                     vm.State = TrackProcessingState.Fault;
                 }
 
-                vm.Save();
+                if (vm.State == TrackProcessingState.Success)
+                {
+                    vm.Save();
+                }
+
                 vm.Refresh();
             }
 

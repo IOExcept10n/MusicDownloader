@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
+using SUSUProgramming.MusicDownloader.Services;
 
 namespace SUSUProgramming.MusicDownloader.Music
 {
@@ -14,24 +16,34 @@ namespace SUSUProgramming.MusicDownloader.Music
     /// Provides methods for parsing track names and managing performer information.
     /// This class is responsible for extracting performers, titles, and subtitles from a formatted track name.
     /// </summary>
-    internal class TrackNameParser
+    internal partial class TrackNameParser
     {
+        private static readonly Regex TrackNumberRegex = GetNumberedTrackFilenameRegex();
+
         /// <summary>
         /// A list of performers that contain slashes, retrieved from the application configuration.
         /// </summary>
-        private static readonly List<string> SlashContainedPerformersList =
-            App.Services.GetRequiredService<IConfiguration>()
-                .GetSection(nameof(SlashContainedPerformersList))
-                .Get<List<string>>() ?? [];
+        private static readonly string[] SlashContainedPerformersList = App.Services?.GetService<AppConfig>()?.SlashContainedPerformersList ?? [];
 
         /// <summary>
         /// A list of tuples containing formatted performer names and their original names,
         /// created from the <see cref="SlashContainedPerformersList"/>.
         /// </summary>
         private static readonly List<(string, string)> SlashContainedReplacement =
-            (from performer in SlashContainedPerformersList
+            [.. from performer in SlashContainedPerformersList
              let parts = performer.Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-             select (string.Join(", ", parts), performer)).ToList();
+             select (string.Join(", ", parts), performer)];
+
+        private static ILogger<TrackNameParser>? logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackNameParser"/> class.
+        /// </summary>
+        /// <param name="logger">The logger to use for logging operations.</param>
+        public TrackNameParser(ILogger<TrackNameParser>? logger = null)
+        {
+            TrackNameParser.logger = logger;
+        }
 
         /// <summary>
         /// Fixes the performers in the provided track details by replacing any slashed performer names
@@ -40,12 +52,24 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <param name="track">The track details to fix performers for.</param>
         public static void FixPerformers(TrackDetails track)
         {
+            ArgumentNullException.ThrowIfNull(track);
+
+            logger?.LogDebug("Fixing performers for track: {TrackName}", track.FormedTrackName);
             var artists = track.FormedArtistString;
             foreach (var artist in SlashContainedReplacement)
-                artists = artists.Replace(artist.Item1, artist.Item2);
+            {
+                if (artists.Contains(artist.Item1))
+                {
+                    logger?.LogTrace("Replacing formatted artist '{FormattedArtist}' with original '{OriginalArtist}'", artist.Item1, artist.Item2);
+                    artists = artists.Replace(artist.Item1, artist.Item2);
+                }
+            }
 
-            track.SetTag(nameof(Tags.Performers), artists.Split(", "));
-            track.SetTag(nameof(Tags.AlbumArtists), artists.Split(", "));
+            var performers = artists.Split(", ");
+            logger?.LogDebug("Setting performers: {Performers}", string.Join(", ", performers));
+            track.SetTag(nameof(Tags.Performers), performers);
+            track.SetTag(nameof(Tags.AlbumArtists), performers);
+            logger?.LogDebug("Fixed performers for track: {TrackName}", track.FormedTrackName);
         }
 
         /// <summary>
@@ -58,10 +82,13 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// </returns>
         public static string[] GetPerformers(string formedPerformers)
         {
-            return formedPerformers
-                .Split(["feat. ", "ft."], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .SelectMany(x => x.Split([',', ';'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
-                .ToArray();
+            if (string.IsNullOrEmpty(formedPerformers))
+                return [];
+
+            logger?.LogDebug("Getting performers from string: {Performers}", formedPerformers);
+            var result = formedPerformers.Split([" / "], StringSplitOptions.RemoveEmptyEntries);
+            logger?.LogDebug("Found {Count} performers", result.Length);
+            return result;
         }
 
         /// <summary>
@@ -89,42 +116,32 @@ namespace SUSUProgramming.MusicDownloader.Music
             [NotNullWhen(true)] out string? title,
             [NotNullWhen(true)] out string? subtitle)
         {
-            performers = [];
-            title = string.Empty;
-            subtitle = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(formedTrackName))
+            if (string.IsNullOrEmpty(formedTrackName))
+            {
+                performers = null;
+                title = null;
+                subtitle = null;
                 return false;
-
-            var parts = formedTrackName.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            // Only title
-            if (parts.Length == 1)
-            {
-                title = parts[0];
-                performers = [];
-                subtitle = string.Empty;
-                return !string.IsNullOrWhiteSpace(title);
             }
 
-            // Title and performers
-            if (parts.Length == 2)
+            logger?.LogDebug("Attempting to parse track name: {FormedTrackName}", formedTrackName);
+            formedTrackName = TrackNumberRegex.Replace(formedTrackName, string.Empty);
+            var parts = formedTrackName.Split([" - "], StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length < 2)
             {
-                performers = GetPerformers(parts[0]);
-                title = ParseTitle(parts[1], out subtitle);
-                return performers.Length > 0 && !string.IsNullOrWhiteSpace(title);
+                logger?.LogDebug("Failed to parse track name: {FormedTrackName}", formedTrackName);
+                performers = null;
+                title = null;
+                subtitle = null;
+                return false;
             }
 
-            // Title, performers and subtitle
-            if (parts.Length >= 3)
-            {
-                performers = GetPerformers(parts[0]);
-                title = ParseTitle(parts[1], out subtitle);
-                subtitle = parts[2] ?? subtitle; // Corrected index to 2 for subtitle
-                return performers.Length > 0 && !string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(subtitle);
-            }
+            performers = GetPerformers(parts[0]);
+            title = ParseTitle(parts[1], out subtitle);
 
-            return false;
+            logger?.LogDebug("Successfully parsed track name: {FormedTrackName}", formedTrackName);
+            return true;
         }
 
         /// <summary>
@@ -139,13 +156,17 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// </returns>
         private static string ParseTitle(string titleString, out string subtitle)
         {
+            logger?.LogTrace("Parsing title string: {TitleString}", titleString);
             subtitle = string.Empty;
             int bracketPos = titleString.LastIndexOf('(');
             if (bracketPos == -1)
             {
                 bracketPos = titleString.LastIndexOf('[');
                 if (bracketPos == -1)
+                {
+                    logger?.LogTrace("No brackets found in title string");
                     return titleString;
+                }
             }
 
             int bracketEndPos = titleString.LastIndexOf(']');
@@ -154,16 +175,25 @@ namespace SUSUProgramming.MusicDownloader.Music
 
             // If brackets start but do not end, it's a part of a title.
             if (bracketEndPos == -1)
+            {
+                logger?.LogTrace("Found opening bracket but no closing bracket");
                 return titleString;
+            }
 
             // Before bracket should be whitespace.
             if (!char.IsWhiteSpace(titleString[bracketPos - 1]))
             {
+                logger?.LogTrace("No whitespace before bracket, treating as part of title");
                 return titleString;
             }
 
             subtitle = titleString[(bracketPos + 1)..bracketEndPos].Trim();
-            return titleString[..bracketPos].Trim();
+            var title = titleString[..bracketPos].Trim();
+            logger?.LogTrace("Parsed title: {Title}, Subtitle: {Subtitle}", title, subtitle);
+            return title;
         }
+
+        [GeneratedRegex(@"^\d+\.?\s*", RegexOptions.Compiled)]
+        private static partial Regex GetNumberedTrackFilenameRegex();
     }
 }

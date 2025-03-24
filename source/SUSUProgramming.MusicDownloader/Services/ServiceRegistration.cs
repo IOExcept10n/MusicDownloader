@@ -1,15 +1,9 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input.Platform;
-using Avalonia.VisualTree;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Music;
@@ -70,16 +64,10 @@ namespace SUSUProgramming.MusicDownloader.Services
         /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddConfigurationServices(this IServiceCollection services)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            var config = builder.Build();
-            var settings = AppConfig.LoadOrInitialize(config["SettingsPath"] ?? ".config");
-            services.AddSingleton<IConfiguration>(config)
-                    .AddSingleton(settings)
+            var settings = AppConfig.LoadOrInitialize(".config");
+            services.AddSingleton(settings)
                     .AddLogging(builder =>
                     {
-                        builder.AddConfiguration(config.GetSection("Logging"));
                         builder.AddDebug();
                     });
             return services;

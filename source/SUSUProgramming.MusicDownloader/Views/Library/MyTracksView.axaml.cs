@@ -25,7 +25,22 @@ public partial class MyTracksView : UserControl
     {
         InitializeComponent();
         if (!Design.IsDesignMode)
-            DataContext = App.Services.GetRequiredService<MyTracksViewModel>();
+        {
+            var vm = App.Services.GetRequiredService<MyTracksViewModel>();
+            DataContext = vm;
+            vm.SelectionChanged += (s, e) =>
+            {
+                if (e)
+                {
+                    TracksList.SelectAll();
+                }
+                else
+                {
+                    TracksList.UnselectAll();
+                }
+            };
+        }
+
         var libraryVM = App.Services.GetRequiredService<LibraryViewModel>();
         TracksList.SelectedItems = libraryVM.SelectedTracks;
     }
@@ -98,7 +113,7 @@ public partial class MyTracksView : UserControl
 
     private void ListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (sender is not ListBox listBox)
+        if (sender is not ListBox)
             return;
     }
 
@@ -186,5 +201,13 @@ public partial class MyTracksView : UserControl
             trackVM?.Refresh();
             trackVM?.ResetState();
         }
+    }
+
+    private void SearchBox_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
+    {
+    }
+
+    private void OnSearchClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
     }
 }

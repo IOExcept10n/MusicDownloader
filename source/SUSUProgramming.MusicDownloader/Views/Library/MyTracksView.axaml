@@ -10,6 +10,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" MinHeight="45"/>
 			<RowDefinition Height="45"/>
+			<RowDefinition Height="35"/>
 			<RowDefinition Height="9*"/>
 		</Grid.RowDefinitions>
 		<!--Toolbar-->
@@ -38,50 +39,22 @@
 					<TextBlock Text="{x:Static lang:Resources.AutoTag}"
 							   Margin="2"
 							   VerticalAlignment="Center"/>
-					<TextBlock FontFamily="Segoe Fluent Icons"
+					<TextBlock FontFamily="{StaticResource FluentIconsFont}"
 							   Text="&#xf4a5;"
 							   Margin="2"
 							   VerticalAlignment="Center"
 							   Grid.Column="1"/>
 				</Grid>
 			</Button>
-			<Grid RelativePanel.RightOf="FindTags"
-				  RelativePanel.AlignRightWith="RefreshButtonAnchor"
-				  RelativePanel.AlignVerticalCenterWithPanel="True"
-				  IsEnabled="{Binding AutoTagger.LockControls}"
-				  Margin="2">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="5*" MinWidth="0"/>
-					<ColumnDefinition Width="2*" MaxWidth="150" MinWidth="0"/>
-					<ColumnDefinition Width="*" MaxWidth="60" MinWidth="20"/>
-					<ColumnDefinition Width="120"/>
-				</Grid.ColumnDefinitions>
-				<ProgressBar ShowProgressText="{Binding AutoTagger.IsRunning}"
-							 ProgressTextFormat="{}{0}/{3} • {1:#.##}%"
-							 Value="{Binding AutoTagger.ProcessedCount}"
-							 Maximum="{Binding AutoTagger.TotalCount}"
-							 Margin="5"
-							 MinWidth="1"
-							 ToolTip.Tip="{x:Static lang:Resources.ProgressTip}"
-							 HorizontalAlignment="Stretch"/>
-				<TextBlock Grid.Column="1"
-						   IsVisible="{Binding AutoTagger.HasConflicts}"
-						   VerticalAlignment="Center"
-						   Text="{x:Static lang:Resources.FoundConflicts}"/>
-				<TextBlock Grid.Column="2"
-						   IsVisible="{Binding AutoTagger.HasConflicts}"
-						   VerticalAlignment="Center"
-						   Text="{Binding AutoTagger.Conflicts.Count}"/>
-				<Button Grid.Column="3"
-						Margin="2"
-						IsVisible="{Binding AutoTagger.HasConflicts}"
-						IsEnabled="{Binding AutoTagger.IsFinished}"
-						Content="{x:Static lang:Resources.ResolveConflicts}"
-						VerticalAlignment="Center"
-						ToolTip.Tip="{x:Static lang:Resources.ConflictsTip}"
-						Click="OnResolveConflictsClick"
-						Background="#9E5FAA"/>
-			</Grid>
+			<Border RelativePanel.RightOf="FindTags" Name="RightSearchAnchor"/>
+			<TextBox RelativePanel.AlignVerticalCenterWithPanel="True"
+					 RelativePanel.AlignLeftWith="RightSearchAnchor"
+				     RelativePanel.AlignRightWith="LeftSearchAnchor"
+					 Watermark="{x:Static lang:Resources.SearchWatermark}"
+			         Name="SearchBox"
+					 Text="{Binding SearchTerm}"
+			         Margin="2 0 30 0"/>
+			<Border RelativePanel.LeftOf="RefreshButton" Name="LeftSearchAnchor"/>
 			<Button Name="RefreshButton"
 					IsEnabled="{Binding AutoTagger.LockControls}"
 					RelativePanel.LeftOf="DeleteTracks"
@@ -103,8 +76,45 @@
 				<TextBlock Classes="icons" Text="&#xe74d;"/>
 			</Button>
 		</RelativePanel>
+		<!--Auto tagging progress-->
+		<Grid Grid.Row="1"
+				  IsEnabled="{Binding AutoTagger.LockControls}"
+				  Margin="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="5*" MinWidth="0"/>
+					<ColumnDefinition Width="2*" MaxWidth="150" MinWidth="0"/>
+					<ColumnDefinition Width="*" MaxWidth="60" MinWidth="20"/>
+					<ColumnDefinition Width="120"/>
+				</Grid.ColumnDefinitions>
+				<ProgressBar ShowProgressText="{Binding AutoTagger.IsRunning}"
+							 ProgressTextFormat="{}{0}/{3} • {1:#.##}%"
+							 Value="{Binding AutoTagger.ProcessedCount}"
+							 Maximum="{Binding AutoTagger.TotalCount}"
+							 IsVisible="{Binding AutoTagger.LockControls}"
+							 Margin="5"
+							 MinWidth="1"
+							 ToolTip.Tip="{x:Static lang:Resources.ProgressTip}"
+							 HorizontalAlignment="Stretch"/>
+				<TextBlock Grid.Column="1"
+						   IsVisible="{Binding AutoTagger.HasConflicts}"
+						   VerticalAlignment="Center"
+						   Text="{x:Static lang:Resources.FoundConflicts}"/>
+				<TextBlock Grid.Column="2"
+						   IsVisible="{Binding AutoTagger.HasConflicts}"
+						   VerticalAlignment="Center"
+						   Text="{Binding AutoTagger.Conflicts.Count}"/>
+				<Button Grid.Column="3"
+						Margin="2"
+						IsVisible="{Binding AutoTagger.HasConflicts}"
+						IsEnabled="{Binding AutoTagger.IsFinished}"
+						Content="{x:Static lang:Resources.ResolveConflicts}"
+						VerticalAlignment="Center"
+						ToolTip.Tip="{x:Static lang:Resources.ConflictsTip}"
+						Click="OnResolveConflictsClick"
+						Background="#9E5FAA"/>
+		</Grid>
 		<!--Tracks list header-->
-		<Grid Grid.Row="1" Margin="10 0">
+		<Grid Grid.Row="2" Margin="10 0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" MinWidth="250" MaxWidth="400"/>
 				<ColumnDefinition Width="*" MinWidth="200" MaxWidth="400"/>
@@ -122,10 +132,12 @@
 			<TextBlock Grid.Column="6" Text="{x:Static lang:Resources.ListenState}"/>
 		</Grid>
 		<!--Tracks list-->
-		<ListBox Grid.Row="2"
+		<ListBox Grid.Row="3"
 				 x:Name="TracksList"
-				 ItemsSource="{Binding Tracks}"
-				 SelectionMode="Multiple">
+				 ItemsSource="{Binding FilteredTracks}"
+				 SelectedItems="{Binding SelectedItems, Mode=TwoWay}"
+				 SelectionMode="Multiple"
+				 DoubleTapped="OnDoubleTap">
 			<ListBox.ContextMenu>
 				<ContextMenu>
 					<MenuItem Header="{x:Static lang:Resources.PlayTrack}" Click="OnPlayClick"/>

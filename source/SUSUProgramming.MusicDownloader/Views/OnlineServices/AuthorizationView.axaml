@@ -6,11 +6,6 @@
 			 xmlns:lang="clr-namespace:SUSUProgramming.MusicDownloader.Localization"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SUSUProgramming.MusicDownloader.Views.OnlineServices.AuthorizationView">
-	<Design.DataContext>
-		<!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-		<vm:AuthorizationViewModel />
-	</Design.DataContext>
 	<UserControl.Background>
 		<ImageBrush Source="/Assets/frog-login.jpg" Opacity="0.1" Stretch="UniformToFill"/>
 	</UserControl.Background>
@@ -22,7 +17,7 @@
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
 			<StackPanel Grid.Column="1" Spacing="7">
-				<TextBlock TextWrapping="Wrap" Text="{x:Static lang:Resources.VKAuthorizationLabel}"/>
+				<TextBlock Margin="10 50 10 10" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static lang:Resources.VKAuthorizationLabel}"/>
 				<Label Content="{x:Static lang:Resources.LoginLabel}"/>
 				<TextBox Text="{Binding Login}"/>
 				<Label Content="{x:Static lang:Resources.PasswordLabel}"/>

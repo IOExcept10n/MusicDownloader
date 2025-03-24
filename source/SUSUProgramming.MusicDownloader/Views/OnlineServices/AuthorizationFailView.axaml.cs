@@ -10,7 +10,7 @@ namespace SUSUProgramming.MusicDownloader.Views.OnlineServices;
 /// </summary>
 public partial class AuthorizationFailView : UserControl
 {
-    private TaskCompletionSource clickSource = new();
+    private readonly TaskCompletionSource clickSource = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthorizationFailView"/> class.

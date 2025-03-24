@@ -4,10 +4,14 @@
              RequestedThemeVariant="Dark">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 			 <!-- For now, light theme is not implemented, and, as I've seen in sandbox, it looks terrible.-->
-    <Application.Styles>
+	<Application.Resources>
+		<FontFamily x:Key="FluentIconsFont">avares://SUSUProgramming.MusicDownloader/Assets/Fonts#Segoe Fluent Icons</FontFamily>
+	</Application.Resources>
+	
+	<Application.Styles>
         <FluentTheme />
 		<Style Selector="TextBlock.icons">
-			<Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+			<Setter Property="FontFamily" Value="{StaticResource ResourceKey=FluentIconsFont}"/>
 			<Setter Property="Margin" Value="2 4"/>
 			<Setter Property="Width" Value="15"/>
 			<Setter Property="Height" Value="15"/>
