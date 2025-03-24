@@ -61,6 +61,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add genre.
+        /// </summary>
+        public static string AddGenre {
+            get {
+                return ResourceManager.GetString("AddGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add/Edit path.
         /// </summary>
         public static string AddOrEditPath {
@@ -75,6 +84,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string AddPath {
             get {
                 return ResourceManager.GetString("AddPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to API services.
+        /// </summary>
+        public static string APIAuthentication {
+            get {
+                return ResourceManager.GetString("APIAuthentication", resourceCulture);
             }
         }
         
@@ -403,11 +421,29 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage genres.
+        /// </summary>
+        public static string ManageGenres {
+            get {
+                return ResourceManager.GetString("ManageGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage tracked paths.
         /// </summary>
         public static string ManageTracked {
             get {
                 return ResourceManager.GetString("ManageTracked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage unsorted tracks path.
+        /// </summary>
+        public static string ManageUnsortedPath {
+            get {
+                return ResourceManager.GetString("ManageUnsortedPath", resourceCulture);
             }
         }
         
@@ -592,7 +628,7 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh tracks view.
+        ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string RefreshTip {
             get {
@@ -669,6 +705,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string SearchTip {
             get {
                 return ResourceManager.GetString("SearchTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🔎 Search tracks by title or artist....
+        /// </summary>
+        public static string SearchWatermark {
+            get {
+                return ResourceManager.GetString("SearchWatermark", resourceCulture);
             }
         }
         
@@ -939,6 +984,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string UnsortedLibraryTracks {
             get {
                 return ResourceManager.GetString("UnsortedLibraryTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write unsorted tracks path here....
+        /// </summary>
+        public static string UnsortedPathWatermark {
+            get {
+                return ResourceManager.GetString("UnsortedPathWatermark", resourceCulture);
             }
         }
         

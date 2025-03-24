@@ -9,6 +9,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Collections;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using TagLib;
@@ -48,7 +50,8 @@ namespace SUSUProgramming.MusicDownloader.Music
                 int index = IndexOf(tag);
                 if (index == -1)
                     Add(tag);
-                this[index] = tag;
+                else
+                    this[index] = tag;
             }
         }
 
@@ -257,7 +260,10 @@ namespace SUSUProgramming.MusicDownloader.Music
         {
             // Discard empty tags.
             if (item == null || !item.HasValue)
+            {
                 return;
+            }
+
             int oldIndex = this.IndexOfFirst(x => x.Name == item.Name);
 
             // To replace old value with new one.
@@ -289,14 +295,21 @@ namespace SUSUProgramming.MusicDownloader.Music
         {
             // Discard empty tags.
             if (item == null || !item.HasValue)
+            {
                 return;
+            }
+
             item.ValueUpdated += Item_ValueUpdated;
             Notify(item.Name);
             base.SetItem(index, item);
             CollectionChanged?.Invoke(this, new(NotifyCollectionChangedAction.Replace, item, index));
         }
 
-        private void Item_ValueUpdated(object? sender, EventArgs e) => Notify((sender as ITag)?.Name ?? string.Empty);
+        private void Item_ValueUpdated(object? sender, EventArgs e)
+        {
+            var tag = sender as ITag;
+            Notify(tag?.Name ?? string.Empty);
+        }
 
         private void Notify(string name)
         {

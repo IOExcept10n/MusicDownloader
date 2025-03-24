@@ -294,7 +294,7 @@
     <value>Resolve conflicts detected when tagging</value>
   </data>
   <data name="RefreshTip" xml:space="preserve">
-    <value>Refresh tracks view</value>
+    <value>Refresh</value>
   </data>
   <data name="SelectPathTip" xml:space="preserve">
     <value>Select path to move tracks to.</value>
@@ -424,5 +424,23 @@
   </data>
   <data name="ListenState" xml:space="preserve">
     <value>Listening state</value>
+  </data>
+  <data name="ManageGenres" xml:space="preserve">
+    <value>Manage genres</value>
+  </data>
+  <data name="AddGenre" xml:space="preserve">
+    <value>Add genre</value>
+  </data>
+  <data name="APIAuthentication" xml:space="preserve">
+    <value>API services</value>
+  </data>
+  <data name="SearchWatermark" xml:space="preserve">
+    <value>🔎 Search tracks by title or artist...</value>
+  </data>
+  <data name="ManageUnsortedPath" xml:space="preserve">
+    <value>Manage unsorted tracks path</value>
+  </data>
+  <data name="UnsortedPathWatermark" xml:space="preserve">
+    <value>Write unsorted tracks path here...</value>
   </data>
 </root>

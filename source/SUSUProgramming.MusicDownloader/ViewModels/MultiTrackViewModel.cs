@@ -22,7 +22,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
     /// </summary>
     internal class MultiTrackViewModel : ViewModelBase
     {
-        private static readonly string[] PropertyNames = typeof(MultiTrackViewModel).GetProperties().Select(x => x.Name).ToArray();
+        private static readonly string[] PropertyNames = [.. typeof(MultiTrackViewModel).GetProperties().Select(x => x.Name)];
         private readonly DelayedNotifier notifier;
 
         /// <summary>

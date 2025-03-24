@@ -26,7 +26,22 @@ public partial class UnsortedTracksView : UserControl
     {
         InitializeComponent();
         if (!Design.IsDesignMode)
-            DataContext = App.Services.GetRequiredService<UnsortedTracksViewModel>();
+        {
+            var vm = App.Services.GetRequiredService<UnsortedTracksViewModel>();
+            DataContext = vm;
+            vm.SelectionChanged += (s, e) =>
+            {
+                if (e)
+                {
+                    TracksList.SelectAll();
+                }
+                else
+                {
+                    TracksList.UnselectAll();
+                }
+            };
+        }
+
         var libraryVM = App.Services.GetRequiredService<LibraryViewModel>();
         TracksList.SelectedItems = libraryVM.SelectedTracks;
     }
