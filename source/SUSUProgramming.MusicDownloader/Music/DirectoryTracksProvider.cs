@@ -24,6 +24,7 @@ namespace SUSUProgramming.MusicDownloader.Music
         private readonly ObservableCollection<TrackDetails> tracksObservable = [];
         private readonly ILogger<DirectoryTracksProvider> logger;
         private int? lastInc = null;
+        private bool isDirty = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryTracksProvider"/> class for the specified directory.
@@ -96,6 +97,8 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <returns>Task to wait.</returns>
         public async Task ScanAsync()
         {
+            if (!isDirty)
+                return;
             logger.LogInformation("Starting directory scan for: {DirectoryPath}", trackedDirectory.FullName);
             tracks.Clear();
             tracksObservable.Clear();
@@ -133,6 +136,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             }
 
             logger.LogInformation("Directory scan completed. Scanned: {ScannedCount}, Skipped: {SkippedCount}", scannedFiles, skippedFiles);
+            isDirty = true;
         }
 
         /// <summary>
@@ -196,6 +200,7 @@ namespace SUSUProgramming.MusicDownloader.Music
         private void OnFileUpdate(object sender, FileSystemEventArgs e)
         {
             logger.LogDebug("File system event detected: {ChangeType} for {FilePath}", e.ChangeType, e.FullPath);
+            isDirty = true;
 
             // HACK: for now, when downloading track into scanned location, it tries to read data when track is not ready yet. Let's fix it later.
             /*

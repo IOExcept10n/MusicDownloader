@@ -160,7 +160,7 @@ namespace SUSUProgramming.MusicDownloader.Music
                 {
                     Logger.LogDebug(
                         "Successfully parsed filename into: Artists: {Artists}, Title: {Title}, Subtitle: {Subtitle}",
-                        string.Join(", ", performers),
+                        string.Join(", ", performers ?? []),
                         title,
                         subtitle);
                     details.Add(Tags.Performers + performers);
