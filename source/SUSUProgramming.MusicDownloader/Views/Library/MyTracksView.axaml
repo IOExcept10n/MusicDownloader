@@ -90,7 +90,6 @@
 							 ProgressTextFormat="{}{0}/{3} • {1:#.##}%"
 							 Value="{Binding AutoTagger.ProcessedCount}"
 							 Maximum="{Binding AutoTagger.TotalCount}"
-							 IsVisible="{Binding AutoTagger.LockControls}"
 							 Margin="5"
 							 MinWidth="1"
 							 ToolTip.Tip="{x:Static lang:Resources.ProgressTip}"
