@@ -59,13 +59,14 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         /// <returns>Task to wait until tagging ends.</returns>
         public async Task TagSelectedAsync(IReadOnlyCollection<TrackViewModel> viewModels)
         {
+            List<TrackViewModel> vms = [.. viewModels];
             IsFinished = false;
             ProcessedCount = 0;
-            TotalCount = viewModels.Count;
+            TotalCount = vms.Count;
             IsRunning = true;
-            foreach (var vm in viewModels)
+            foreach (var vm in vms)
                 vm.State = TrackProcessingState.Processing;
-            foreach (var vm in viewModels)
+            foreach (var vm in vms)
             {
                 try
                 {

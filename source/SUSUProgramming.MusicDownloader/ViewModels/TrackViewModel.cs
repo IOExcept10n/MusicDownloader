@@ -448,8 +448,16 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
+
+            if (e.PropertyName is nameof(Performers) or nameof(Genres) or nameof(AlbumArtists))
+            {
+                OnPropertyChanged(e.PropertyName + nameof(String));
+            }
+
             if (e.PropertyName == nameof(State))
             {
+                OnPropertyChanged(nameof(ProcessingStateColor));
+                OnPropertyChanged(nameof(ProcessingStateText));
                 logger?.LogDebug("Track state changed to {State} for track: {TrackName}", State, track.FormedTrackName);
             }
         }
