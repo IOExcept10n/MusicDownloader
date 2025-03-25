@@ -184,15 +184,22 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task ScanAsync()
         {
-            logger.LogInformation("Starting full media library scan");
-            await Unsorted.ScanAsync();
-            foreach (var provider in trackProviders)
+            try
             {
-                logger.LogDebug("Scanning provider: {ProviderPath}", provider.Path);
-                await provider.ScanAsync();
-            }
+                logger.LogInformation("Starting full media library scan");
+                await Unsorted.ScanAsync();
+                foreach (var provider in trackProviders)
+                {
+                    logger.LogDebug("Scanning provider: {ProviderPath}", provider.Path);
+                    await provider.ScanAsync();
+                }
 
-            logger.LogInformation("Media library scan completed");
+                logger.LogInformation("Media library scan completed");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Scanning process has been interrupted because of the unexpected error: ");
+            }
         }
 
         private void OnTrackPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

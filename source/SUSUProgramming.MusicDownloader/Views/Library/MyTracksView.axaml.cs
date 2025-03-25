@@ -1,5 +1,6 @@
 // Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -75,10 +76,20 @@ public partial class MyTracksView : UserControl
     private static void PlaySelected()
     {
         var libraryVM = App.Services.GetRequiredService<LibraryViewModel>();
-        string tempFile = Path.GetTempFileName();
-        File.Move(tempFile, tempFile += ".m3u8");
-        using (var writer = new StreamWriter(tempFile))
+        if (libraryVM.SelectedTracks.Count == 0)
+            return;
+        var info = new ProcessStartInfo() { UseShellExecute = true };
+        if (libraryVM.SelectedTracks.Count == 1)
         {
+            info.FileName = libraryVM.SelectedTracks[0].Model.FilePath;
+        }
+        else
+        {
+            string tempFile = Path.GetTempFileName();
+            File.Move(tempFile, tempFile += ".m3u8");
+            info.FileName = tempFile;
+
+            using var writer = new StreamWriter(tempFile);
             foreach (var track in libraryVM.SelectedTracks)
             {
                 if (track.Model.FilePath == null) continue;
@@ -86,11 +97,6 @@ public partial class MyTracksView : UserControl
             }
         }
 
-        var info = new ProcessStartInfo()
-        {
-            FileName = tempFile,
-            UseShellExecute = true,
-        };
         Process.Start(info);
     }
 

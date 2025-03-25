@@ -132,9 +132,9 @@ namespace SUSUProgramming.MusicDownloader.Music
             {
                 logger?.LogDebug("Failed to parse track name: {FormedTrackName}", formedTrackName);
                 performers = null;
-                title = null;
+                title = parts.Length > 0 ? parts[0] : null;
                 subtitle = null;
-                return false;
+                return parts.Length > 0;
             }
 
             performers = GetPerformers(parts[0]);
