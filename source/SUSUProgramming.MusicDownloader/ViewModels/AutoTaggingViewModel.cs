@@ -64,8 +64,14 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             ProcessedCount = 0;
             TotalCount = vms.Count;
             IsRunning = true;
+            Conflicts.Clear();
             foreach (var vm in vms)
+            {
                 vm.State = TrackProcessingState.Processing;
+                if (settings.BackupOnAutoTag)
+                    vm.CreateBackup();
+            }
+
             foreach (var vm in vms)
             {
                 try
@@ -102,7 +108,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                     vm.State = TrackProcessingState.Fault;
                 }
 
-                if (vm.State == TrackProcessingState.Success)
+                if (vm.State == TrackProcessingState.Success && settings.AutoSaveTags)
                 {
                     vm.Save();
                 }

@@ -98,7 +98,12 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.ID3
         }
 
         /// <inheritdoc/>
-        public ITag Clone() => (CoverTag)MemberwiseClone();
+        public ITag Clone()
+        {
+            var clone = (CoverTag)MemberwiseClone();
+            clone.pictures = [.. pictures];
+            return clone;
+        }
 
         /// <inheritdoc/>
         public void ReadFrom(File file)

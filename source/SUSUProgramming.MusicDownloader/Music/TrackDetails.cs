@@ -275,8 +275,8 @@ namespace SUSUProgramming.MusicDownloader.Music
             }
 
             item.ValueUpdated += Item_ValueUpdated;
-            Notify(item.Name);
             base.InsertItem(index, item);
+            Notify(item.Name);
             CollectionChanged?.Invoke(this, new(NotifyCollectionChangedAction.Add, item, index));
         }
 
@@ -285,8 +285,8 @@ namespace SUSUProgramming.MusicDownloader.Music
         {
             var item = Items[index];
             item.ValueUpdated -= Item_ValueUpdated;
-            Notify(item.Name);
             base.RemoveItem(index);
+            Notify(item.Name);
             CollectionChanged?.Invoke(this, new(NotifyCollectionChangedAction.Remove, item, index));
         }
 

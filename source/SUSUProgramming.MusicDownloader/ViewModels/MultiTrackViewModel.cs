@@ -258,6 +258,20 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         }
 
         /// <summary>
+        /// Rolls back changes in all of the selected tracks/
+        /// This method calls the <see cref="Rollback"/> method on each track in the see <see cref="SelectedTracks"/> collection.
+        /// </summary>
+        public void Rollback()
+        {
+            foreach (var track in SelectedTracks)
+            {
+                track.Rollback();
+            }
+
+            NotifyReset();
+        }
+
+        /// <summary>
         /// Deletes cover from all selected tracks.
         /// </summary>
         public void DeleteCover()
@@ -306,7 +320,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         /// <returns>Task to wait for.</returns>
         public async Task SetCoverFromFileAsync(Uri path)
         {
-            foreach (var track in SelectedTracks)
+            List<TrackViewModel> tracks = [.. SelectedTracks];
+            foreach (var track in tracks)
             {
                 await track.SetNewCoverAsync(path);
             }
@@ -327,6 +342,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private void OnSelectedTracksUpdated(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             notifier.NotifyUpdate();
+        }
+
+        private void OnTrackPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void UpdateValue<T>(Action<TrackViewModel, T> setter, T value, [CallerMemberName] string? callingProperty = null)

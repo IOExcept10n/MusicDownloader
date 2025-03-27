@@ -73,6 +73,13 @@ public sealed partial class LibraryView : UserControl, IDisposable
         library.EditingModel.Save();
     }
 
+    private void OnCancelClick(object? sender, RoutedEventArgs e)
+    {
+        var library = (LibraryViewModel?)DataContext;
+        if (library == null) return;
+        library.EditingModel.Rollback();
+    }
+
     private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
     {
         // I didn't know that events bubble up to custom handler

@@ -143,6 +143,7 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
                 }
 
                 logger.LogWarning("Track not found on Last.FM: {Title} by {Artist}", title, artist);
+                listenCountCache[(artist, title)] = null;
                 return -1;
             }
             catch (Exception ex)
