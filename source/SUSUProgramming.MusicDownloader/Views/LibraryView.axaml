@@ -230,9 +230,22 @@
 						</ContextMenu>
 					</cc:RoundedImage.ContextMenu>
 				</cc:RoundedImage>
-				<!--Save button-->
-				<Button Grid.Row="2"
-						Margin="10 0"
+				<!--Save and cancel buttons-->
+				<Grid Grid.Row="2"
+				      Margin="10 0"
+				      HorizontalAlignment="Stretch"
+					  ColumnDefinitions="*,*">
+					<Button Grid.Column="0"
+						Margin="2 0"
+						HorizontalContentAlignment="Center"
+						VerticalContentAlignment="Center"
+						HorizontalAlignment="Stretch"
+						Content="{x:Static lang:Resources.Cancel}"
+						Background="#77777777"
+						Click="OnCancelClick"
+						Name="CancelButton"/>
+					<Button Grid.Column="1"
+						Margin="2 0"
 						HorizontalContentAlignment="Center"
 						VerticalContentAlignment="Center"
 						HorizontalAlignment="Stretch"
@@ -240,110 +253,9 @@
 						Background="#7798ff98"
 						Click="OnSaveClick"
 						Name="SaveButton"/>
-			</Grid>
-		</Grid>
-		<Grid Grid.Column="2" 
-			  DataContext="{Binding EditingModel}"
-			  x:DataType="vm:MultiTrackViewModel"
-			  IsVisible="False">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="2*" MinWidth="120" MaxWidth="200"/>
-				<ColumnDefinition Width="2*" MinWidth="150" MaxWidth="600"/>
-				<ColumnDefinition Width="2*" MinWidth="160" MaxWidth="200"/>
-				<ColumnDefinition Width="2*" MinWidth="140" MaxWidth="600"/>
-				<ColumnDefinition Width="2*" MinWidth="120" MaxWidth="200"/>
-				<ColumnDefinition Width="2*" MinWidth="200" MaxWidth="600"/>
-				<ColumnDefinition Width="*" MinWidth="40"/>
-				<ColumnDefinition Width="3*" MinWidth="150" MaxWidth="300"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="40"/>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="30"/>
-			</Grid.RowDefinitions>
-			<!--Row 0-->
-			
-			
-			
-
-			<!--Row 1-->
-			
-			
-			<!--A little shrinking to save free space-->
-			<Grid Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="4*" MinWidth="100"/>
-					<ColumnDefinition Width="*" MinWidth="40"/>
-					<ColumnDefinition Width="20"/>
-					<ColumnDefinition Width="*" MinWidth="40"/>
-					<ColumnDefinition MinWidth="10"/>
-					<ColumnDefinition Width="2*" MinWidth="60"/>
-					<ColumnDefinition Width="4*" MinWidth="120"/>
-				</Grid.ColumnDefinitions>
-				
-
+				</Grid>
 				
 			</Grid>
-			<!--Row 2-->
-			
-			
-			<!--Shrinking for the year and disc-->
-			<Grid Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="4*" MinWidth="100"/>
-					<ColumnDefinition Width="*" MinWidth="40"/>
-					<ColumnDefinition Width="20"/>
-					<ColumnDefinition Width="*" MinWidth="40"/>
-					<ColumnDefinition MinWidth="10"/>
-					<ColumnDefinition Width="2*" MinWidth="60"/>
-					<ColumnDefinition Width="4*" MinWidth="80"/>
-				</Grid.ColumnDefinitions>
-				
-
-				
-			</Grid>
-			
-			<!-- Row 3 -->
-			
-			<Grid Grid.Column="4" Grid.Row="3" Grid.ColumnSpan="2"
-				  HorizontalAlignment="Stretch"
-				  VerticalAlignment="Stretch">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" MinWidth="100"/>
-					<ColumnDefinition Width="2*" MinWidth="125" MaxWidth="200"/>
-					<ColumnDefinition Width="2*" MinWidth="80" MaxWidth="200"/>
-				</Grid.ColumnDefinitions>
-				
-			</Grid>
-			
-			<!--<TextBlock Grid.Column="4" Grid.Row="3"
-					   Text="{x:Static lang:Resources.TrackCover}"
-					   VerticalAlignment="Center"
-					   HorizontalAlignment="Right"
-					   Margin="2"/>
-			<RelativePanel Grid.Column="5" Grid.Row="3"
-					 Margin="3"
-					 HorizontalAlignment="Stretch">
-				<TextBox Text="{Binding CoverUrl}"
-						 RelativePanel.AlignVerticalCenterWithPanel="True"
-						 RelativePanel.AlignRightWith="Anchor"
-						 RelativePanel.AlignLeftWithPanel="True"/>
-				<Border Name="Anchor" RelativePanel.LeftOf="BrowseCover"/>
-				<Button RelativePanel.AlignRightWithPanel="True"
-						RelativePanel.AlignVerticalCenterWithPanel="True"
-						Margin="2"
-						Height="35"
-						Name="BrowseCover">
-					<TextBlock Classes="icons" Text="&#xe838;"/>
-				</Button>
-			</RelativePanel>-->
-
-
-			
-			
 		</Grid>
 	</Grid>
 </UserControl>

@@ -25,6 +25,7 @@ namespace SUSUProgramming.MusicDownloader.Music
         private readonly ILogger<DirectoryTracksProvider> logger;
         private int? lastInc = null;
         private bool isDirty = true;
+        private volatile bool isScanning = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryTracksProvider"/> class for the specified directory.
@@ -97,8 +98,9 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <returns>Task to wait.</returns>
         public async Task ScanAsync()
         {
-            if (!isDirty)
+            if (!isDirty || isScanning)
                 return;
+            isScanning = true;
             logger.LogInformation("Starting directory scan for: {DirectoryPath}", trackedDirectory.FullName);
             tracks.Clear();
             tracksObservable.Clear();
@@ -137,6 +139,7 @@ namespace SUSUProgramming.MusicDownloader.Music
 
             logger.LogInformation("Directory scan completed. Scanned: {ScannedCount}, Skipped: {SkippedCount}", scannedFiles, skippedFiles);
             isDirty = true;
+            isScanning = false;
         }
 
         /// <summary>

@@ -125,11 +125,16 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private static ILogger<TrackViewModel>? logger;
         private readonly TrackDetails track;
         private readonly DelayedNotifier listenStatusUpdater;
+        private TrackDetails? backup;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ListeningStateBrush))]
         [NotifyPropertyChangedFor(nameof(ListeningStateText))]
         private TrackListeningIndicator listeningState;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanCancel))]
+        private bool isModified;
 
         private Bitmap? cover;
         private bool isCoverDirty = true;
@@ -227,6 +232,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             get => Genres == null ? null : string.Join(", ", Genres);
             set => Genres = value?.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the track can be cancelled.
+        /// </summary>
+        public bool CanCancel => !IsModified && !string.IsNullOrEmpty(track.FilePath);
 
         /// <summary>
         /// Gets indication text for the current listening state.
@@ -339,6 +349,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
                 if (isCoverDirty)
                 {
                     UpdateCover();
+                    isCoverDirty = false;
                 }
 
                 return cover ?? EmptyCover;
@@ -349,6 +360,40 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         /// Gets or sets the year the track was released.
         /// </summary>
         public uint Year { get => Read<uint>(); set => Update(value); }
+
+        /// <summary>
+        /// Creates track backup to rollback if user selects.
+        /// </summary>
+        public void CreateBackup()
+        {
+            MetadataManager.RestoreCover(track);
+            backup = [.. track];
+            var cover = backup.OfType<CoverTag>().FirstOrDefault();
+            if (cover != null)
+            {
+                backup.Remove(cover);
+                backup.Add(cover.Clone());
+            }
+        }
+
+        /// <summary>
+        /// Reloads track info from the current file or backup state.
+        /// </summary>
+        public void Rollback()
+        {
+            if (backup != null)
+            {
+                ResetDetails(backup);
+                Save();
+            }
+            else if (track.FilePath != null)
+            {
+                var data = MetadataManager.ReadMetadata(track.FilePath);
+                ResetDetails(data);
+            }
+
+            Refresh();
+        }
 
         /// <summary>
         /// Refreshes the track details and updates the UI.
@@ -364,6 +409,12 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             foreach (var property in RecommendedTags)
             {
                 OnPropertyChanged(property);
+            }
+
+            isCoverDirty = true;
+            if (track.HasCover)
+            {
+                OnPropertyChanged(nameof(TrackCover));
             }
 
             logger?.LogDebug("Track refreshed: {TrackName}", track.FormedTrackName);
@@ -401,6 +452,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         {
             logger?.LogDebug("Saving track: {TrackName}", track.FormedTrackName);
             MetadataManager.SaveMetadata(Model);
+            IsModified = false;
             logger?.LogDebug("Track saved: {TrackName}", track.FormedTrackName);
         }
 
@@ -434,6 +486,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             }
             else
             {
+                MetadataManager.RestoreCover(track);
                 logger?.LogDebug("Updating existing cover for track: {TrackName}", track.FormedTrackName);
                 await ((CoverTag)track[nameof(CoverTag.Cover)]).UpdateCoverAsync(value, http);
             }
@@ -452,6 +505,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             if (e.PropertyName is nameof(Performers) or nameof(Genres) or nameof(AlbumArtists))
             {
                 OnPropertyChanged(e.PropertyName + nameof(String));
+            }
+
+            if (e.PropertyName is nameof(CoverTag.Cover) or nameof(CoverUrl))
+            {
+                isCoverDirty = true;
             }
 
             if (e.PropertyName == nameof(State))
@@ -508,6 +566,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         private void OnTrackUpdated(object? sender, PropertyChangedEventArgs e)
         {
             logger?.LogDebug("Track property {Property} updated for track: {TrackName}", e.PropertyName, track.FormedTrackName);
+            IsModified = true;
             OnPropertyChanged(e.PropertyName);
         }
 
@@ -534,6 +593,15 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
 
             logger?.LogTrace("Updating {Property} for track: {TrackName}, Value: {Value}", callerProperty, track.FormedTrackName, value);
             track.SetTag(callerProperty, value);
+        }
+
+        private void ResetDetails(TrackDetails details)
+        {
+            track.Clear();
+            foreach (var tag in details)
+            {
+                track.Add(tag);
+            }
         }
 
         /// <summary>

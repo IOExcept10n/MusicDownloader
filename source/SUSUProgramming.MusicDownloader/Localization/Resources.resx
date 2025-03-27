@@ -443,4 +443,10 @@
   <data name="UnsortedPathWatermark" xml:space="preserve">
     <value>Write unsorted tracks path here...</value>
   </data>
+  <data name="AutoSaveTags" xml:space="preserve">
+    <value>Save tags automatically on online search</value>
+  </data>
+  <data name="BackupOnAutoSave" xml:space="preserve">
+    <value>Create track backups before auto tagging</value>
+  </data>
 </root>

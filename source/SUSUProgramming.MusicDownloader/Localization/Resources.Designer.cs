@@ -124,6 +124,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save tags automatically on online search.
+        /// </summary>
+        public static string AutoSaveTags {
+            get {
+                return ResourceManager.GetString("AutoSaveTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Autotag.
         /// </summary>
         public static string AutoTag {
@@ -147,6 +156,15 @@ namespace SUSUProgramming.MusicDownloader.Localization {
         public static string AutoTagTip {
             get {
                 return ResourceManager.GetString("AutoTagTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create track backups before auto tagging.
+        /// </summary>
+        public static string BackupOnAutoSave {
+            get {
+                return ResourceManager.GetString("BackupOnAutoSave", resourceCulture);
             }
         }
         

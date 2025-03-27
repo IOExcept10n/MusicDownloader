@@ -31,6 +31,16 @@ namespace SUSUProgramming.MusicDownloader.Services
         public bool AutoTagOnDownload { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to automatically save changed tags on auto tagging.
+        /// </summary>
+        public bool AutoSaveTags { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to create backups of the selected tracks before start of an auto tagging.
+        /// </summary>
+        public bool BackupOnAutoTag { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the collection of blacklisted paths.
         /// </summary>
         public ObservableCollection<string> BlacklistedPaths { get; set; } = [];
