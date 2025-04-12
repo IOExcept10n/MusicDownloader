@@ -129,13 +129,10 @@ public partial class UnsortedTracksView : UserControl
         string? newPath = PathSelector.SelectedItem?.ToString();
         if (string.IsNullOrEmpty(newPath))
             return;
-        for (int i = 0; i < libraryVM.SelectedTracks.Count; i++)
+        var selectedTracks = libraryVM.SelectedTracks.ToList();
+        foreach (var track in selectedTracks)
         {
-            TrackViewModel? track = libraryVM.SelectedTracks[i];
             library.MoveTrack(track.Model, newPath);
-
-            // Should decrement i because each movement should trigger update event that would remove items from list automatically.
-            i--;
         }
     }
 
@@ -144,10 +141,12 @@ public partial class UnsortedTracksView : UserControl
         PlaySelected();
     }
 
-    private void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (DataContext is not UnsortedTracksViewModel vm)
             return;
+        var libraryVM = App.Services.GetRequiredService<MediaLibrary>();
+        await libraryVM.ScanAsync();
         foreach (var track in vm.UnsortedTracks)
         {
             track.ResetState();

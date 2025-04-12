@@ -153,7 +153,6 @@ namespace SUSUProgramming.MusicDownloader.Music
             else
             {
                 logger.LogError("Invalid move operation - track must be moved between tracked locations");
-                ThrowHelper.ThrowInvalidOperationException("Couldn't determine movement type. Track should be moved between tracked locations.");
                 return;
             }
 

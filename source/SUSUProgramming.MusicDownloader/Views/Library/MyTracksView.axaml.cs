@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -63,13 +64,10 @@ public partial class MyTracksView : UserControl
         var library = App.Services.GetRequiredService<MediaLibrary>();
         if (string.IsNullOrEmpty(newPath))
             return;
-        for (int i = 0; i < libraryVM.SelectedTracks.Count; i++)
+        var selectedTracks = libraryVM.SelectedTracks.ToList();
+        foreach (var track in selectedTracks)
         {
-            TrackViewModel? track = libraryVM.SelectedTracks[i];
             library.MoveTrack(track.Model, newPath);
-
-            // Should decrement i because each movement should trigger update event that would remove items from list automatically.
-            i--;
         }
     }
 
@@ -158,10 +156,12 @@ public partial class MyTracksView : UserControl
         PlaySelected();
     }
 
-    private void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnRefreshClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (DataContext is not MyTracksViewModel vm)
             return;
+        var libraryVM = App.Services.GetRequiredService<MediaLibrary>();
+        await libraryVM.ScanAsync();
         foreach (var track in vm.Tracks)
         {
             track.ResetState();
