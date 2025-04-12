@@ -52,6 +52,7 @@ namespace SUSUProgramming.MusicDownloader.Music
             directoryWatcher.Filter = "*.mp3";
             directoryWatcher.EnableRaisingEvents = true;
             logger.LogDebug("Directory watcher initialized and started");
+            lastInc = trackedDirectory.EnumerateFiles("*.mp3").Count();
         }
 
         /// <summary>
