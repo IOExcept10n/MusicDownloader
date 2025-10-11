@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
 

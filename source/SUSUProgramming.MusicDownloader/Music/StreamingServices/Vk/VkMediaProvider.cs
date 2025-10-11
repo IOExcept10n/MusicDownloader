@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using SUSUProgramming.MusicDownloader.Collections;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
 using VkNet;

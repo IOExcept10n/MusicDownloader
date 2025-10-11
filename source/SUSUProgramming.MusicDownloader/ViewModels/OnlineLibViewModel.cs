@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using SUSUProgramming.MusicDownloader.Collections;
 using SUSUProgramming.MusicDownloader.Music;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Music.StreamingServices;
 using SUSUProgramming.MusicDownloader.Services;

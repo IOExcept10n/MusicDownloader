@@ -13,7 +13,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Collections;
-using SUSUProgramming.MusicDownloader.Music;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
 
 namespace SUSUProgramming.MusicDownloader.ViewModels
 {

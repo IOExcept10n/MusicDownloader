@@ -27,7 +27,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
             {
                 state = TrackLoadingState.Ignored;
             }
-            else if (library.ContainsTrack(track.FormedTrackName))
+            else if (library.ContainsTrack(track.FormedArtistString, track.FormedTitle))
             {
                 state = TrackLoadingState.Exists;
             }

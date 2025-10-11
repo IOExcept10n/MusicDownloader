@@ -4,12 +4,14 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Music;
 using SUSUProgramming.MusicDownloader.Music.Metadata;
 using SUSUProgramming.MusicDownloader.Music.StreamingServices;
 using SUSUProgramming.MusicDownloader.Music.StreamingServices.Vk;
+using SUSUProgramming.MusicDownloader.Persistence;
 using SUSUProgramming.MusicDownloader.ViewModels;
 using SUSUProgramming.MusicDownloader.Views;
 using VkNet;
@@ -48,6 +50,7 @@ namespace SUSUProgramming.MusicDownloader.Services
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddConfigurationServices()
+                    .AddPersistenceServices()
                     .AddMediaServices()
                     .AddApiServices()
                     .AddMetadataServices()
@@ -110,6 +113,19 @@ namespace SUSUProgramming.MusicDownloader.Services
             }
 
             services.AddSingleton<TagService>();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds database-related services to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The service collection to add services to.</param>
+        /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
+        public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
+        {
+            services.AddScoped<TracksDbContext>();
+            services.AddScoped<TrackStatsRepository>();
+            services.AddScoped<ITrackStatsRepository>(p => p.GetRequiredService<TrackStatsRepository>());
             return services;
         }
 
