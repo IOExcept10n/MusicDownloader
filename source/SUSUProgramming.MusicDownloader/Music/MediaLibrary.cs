@@ -7,10 +7,14 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Collections;
+using SUSUProgramming.MusicDownloader.Persistence;
 using SUSUProgramming.MusicDownloader.Services;
+using SUSUProgramming.MusicDownloader.ViewModels;
 
 namespace SUSUProgramming.MusicDownloader.Music
 {
@@ -21,21 +25,24 @@ namespace SUSUProgramming.MusicDownloader.Music
     /// </summary>
     internal class MediaLibrary
     {
-        private readonly HashSet<string> trackNamesSet = new(StringComparer.OrdinalIgnoreCase);
         private readonly ReadOnlyCollection<DirectoryTracksProvider> trackProviders;
         private readonly ObservableProjection<DirectoryTracksProvider, IReadOnlyCollection<TrackDetails>> tracks;
-        private readonly Dictionary<TrackDetails, string> tracksNameMapping = [];
+        private readonly Dictionary<TrackDetails, (string Artist, string Title)> tracksNameMapping = [];
         private readonly ILogger<MediaLibrary> logger;
+        private readonly ITrackStatsRepository trackStatsRepo;
+        private readonly DelayedNotifier n;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaLibrary"/> class.
         /// </summary>
         /// <param name="settings">The application configuration settings containing paths for unsorted and tracked tracks.</param>
+        /// <param name="trackContext">A database for tracks stats.</param>
         /// <param name="logger">The logger to use for logging operations.</param>
         /// <param name="dtpLogger">The logger to use with directory track providers instances.</param>
-        public MediaLibrary(AppConfig settings, ILogger<MediaLibrary> logger, ILogger<DirectoryTracksProvider> dtpLogger)
+        public MediaLibrary(AppConfig settings, ITrackStatsRepository trackStatsRepo, ILogger<MediaLibrary> logger, ILogger<DirectoryTracksProvider> dtpLogger)
         {
             this.logger = logger;
+            this.trackStatsRepo = trackStatsRepo;
             logger.LogInformation("Initializing MediaLibrary with {TrackedPathCount} tracked paths", settings.TrackedPaths.Count);
 
             Unsorted = new(settings.UnsortedTracksPath, dtpLogger);
@@ -45,6 +52,8 @@ namespace SUSUProgramming.MusicDownloader.Music
 
             ((INotifyCollectionChanged)AllTracks).CollectionChanged += OnTracksChanged;
             ((INotifyCollectionChanged)Unsorted.Tracks).CollectionChanged += OnTracksChanged;
+
+            n = new(trackStatsRepo.SaveAsync, 5000);
 
             logger.LogInformation("MediaLibrary initialized successfully");
         }
@@ -62,12 +71,14 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <summary>
         /// Checks if a track with the specified name exists in the media library.
         /// </summary>
-        /// <param name="trackName">The name of the track to check.</param>
+        /// <param name="artist">The artist to check.</param>
+        /// <param name="title">The title of the track to check.</param>
         /// <returns>True if the track exists; otherwise, false.</returns>
-        public bool ContainsTrack(string trackName)
+        public bool ContainsTrack(string artist, string title)
         {
-            bool exists = trackNamesSet.Contains(trackName);
-            logger.LogDebug("Checking if track exists: {TrackName} - {Result}", trackName, exists);
+            var stats = trackStatsRepo.GetByArtistAndTitleAsync(artist, title).GetAwaiter().GetResult();
+            bool exists = stats?.IsDownloaded == true;
+            logger.LogDebug("Checking if track exists: {Artist} - {TrackName} - {Result}", artist, title, exists);
             return exists;
         }
 
@@ -207,53 +218,84 @@ namespace SUSUProgramming.MusicDownloader.Music
             {
                 if (sender is not TrackDetails track)
                     return;
+                Dispatcher.UIThread.Post(
+                    async () =>
+                    {
+                        (string oldArtist, string oldName) = tracksNameMapping[track];
 
-                string oldName = tracksNameMapping[track];
-                trackNamesSet.Remove(oldName);
-                trackNamesSet.Add(track.FormedTrackName);
-                tracksNameMapping[track] = track.FormedTrackName;
-                logger.LogDebug("Track name updated from {OldName} to {NewName}", oldName, track.FormedTrackName);
+                        var info = await trackStatsRepo.GetOrCreateByArtistAndTitleAsync(oldArtist, oldName);
+
+                        string? oldPath = info.TrackPath;
+
+                        info.TrackPath = null;
+
+                        n.NotifyUpdate();
+
+                        var newInfo = await trackStatsRepo.GetOrCreateByArtistAndTitleAsync(track.FormedArtistString, track.FormedTitle);
+
+                        info.TrackPath = oldPath;
+
+                        n.NotifyUpdate();
+
+                        tracksNameMapping[track] = (track.FormedArtistString, track.FormedTitle);
+                        logger.LogDebug("Track name updated from {OldName} to {NewName}", oldName, track.FormedTrackName);
+                    },
+                    DispatcherPriority.Background);
             }
         }
 
         private void OnTracksChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             logger.LogDebug("Tracks collection changed: {Action}", e.Action);
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (TrackDetails track in e.NewItems!)
+            Dispatcher.UIThread.Post(
+                async () =>
+                {
+                    switch (e.Action)
                     {
-                        tracksNameMapping[track] = track.FormedTrackName;
-                        trackNamesSet.Add(track.FormedTrackName);
-                        track.PropertyChanged += OnTrackPropertyChanged;
-                        logger.LogDebug("Added track: {TrackName}", track.FormedTrackName);
+                        case NotifyCollectionChangedAction.Add:
+                            foreach (TrackDetails track in e.NewItems!)
+                            {
+                                tracksNameMapping[track] = (track.FormedArtistString, track.FormedTitle);
+
+                                var stats = await trackStatsRepo.GetOrCreateByArtistAndTitleAsync(track.FormedArtistString, track.FormedTitle);
+
+                                stats.TrackPath = track.FilePath;
+
+                                
+                                track.PropertyChanged += OnTrackPropertyChanged;
+                                logger.LogDebug("Added track: {TrackName}", track.FormedTrackName);
+                            }
+
+                            break;
+
+                        case NotifyCollectionChangedAction.Remove:
+                            foreach (TrackDetails track in e.OldItems!)
+                            {
+                                tracksNameMapping.Remove(track);
+                                var stats = await trackStatsRepo.GetOrCreateByArtistAndTitleAsync(track.FormedArtistString, track.FormedTitle);
+                                stats.TrackPath = null;
+                                track.PropertyChanged -= OnTrackPropertyChanged;
+                                logger.LogDebug("Removed track: {TrackName}", track.FormedTrackName);
+                            }
+
+                            break;
+
+                        case NotifyCollectionChangedAction.Reset:
+                            foreach (TrackDetails track in ((ObservableCollection<TrackDetails>?)sender)!)
+                            {
+                                tracksNameMapping.Remove(track);
+                                var stats = await trackStatsRepo.GetOrCreateByArtistAndTitleAsync(track.FormedArtistString, track.FormedTitle);
+                                stats.TrackPath = null;
+                                track.PropertyChanged -= OnTrackPropertyChanged;
+                            }
+
+                            logger.LogDebug("Tracks collection reset");
+                            break;
                     }
 
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (TrackDetails track in e.OldItems!)
-                    {
-                        tracksNameMapping.Remove(track);
-                        trackNamesSet.Remove(track.FormedTrackName);
-                        track.PropertyChanged -= OnTrackPropertyChanged;
-                        logger.LogDebug("Removed track: {TrackName}", track.FormedTrackName);
-                    }
-
-                    break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    foreach (TrackDetails track in ((ObservableCollection<TrackDetails>?)sender)!)
-                    {
-                        tracksNameMapping.Remove(track);
-                        trackNamesSet.Remove(track.FormedTrackName);
-                        track.PropertyChanged -= OnTrackPropertyChanged;
-                    }
-
-                    logger.LogDebug("Tracks collection reset");
-                    break;
-            }
+                    n.NotifyUpdate();
+                },
+                DispatcherPriority.Background);
         }
     }
 }

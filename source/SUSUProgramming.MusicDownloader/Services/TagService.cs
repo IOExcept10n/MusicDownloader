@@ -66,7 +66,7 @@ namespace SUSUProgramming.MusicDownloader.Services
                 logger?.LogDebug("Rewriting metadata for track: {TrackName}", original.FormedTrackName);
                 foreach (var tag in result.Details)
                 {
-                    combined.SetTag(tag.Name, tag.Value);
+                    combined.Set(tag.Name, tag.Value);
                 }
             }
             else
@@ -76,7 +76,7 @@ namespace SUSUProgramming.MusicDownloader.Services
                 {
                     if (!combined.ContainsKey(tag.Name))
                     {
-                        combined.SetTag(tag.Name, tag.Value);
+                        combined.Set(tag.Name, tag.Value);
                     }
                 }
             }

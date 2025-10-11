@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Reactive;
 using Avalonia.Xaml.Interactivity;
 
 namespace SUSUProgramming.MusicDownloader.Behaviors
@@ -22,10 +23,10 @@ namespace SUSUProgramming.MusicDownloader.Behaviors
 
         static LostFocusUpdateBindingBehavior()
         {
-            TextProperty.Changed.Subscribe(e =>
+            TextProperty.Changed.Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs<string>>(e =>
             {
                 ((LostFocusUpdateBindingBehavior)e.Sender).OnBindingValueChanged();
-            });
+            }));
         }
 
         /// <summary>

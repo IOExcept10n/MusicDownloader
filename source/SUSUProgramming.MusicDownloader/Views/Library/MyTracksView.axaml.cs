@@ -51,10 +51,12 @@ public partial class MyTracksView : UserControl
     {
         var libraryVM = App.Services.GetRequiredService<LibraryViewModel>();
         var library = App.Services.GetRequiredService<MediaLibrary>();
-        for (int i = 0; i < libraryVM.SelectedTracks.Count; i++)
+
+        var selected = libraryVM.SelectedTracks.ToList();
+        for (int i = 0; i < selected.Count; i++)
         {
             library.DeleteTrack(libraryVM.SelectedTracks[i].Model);
-            i--;
+            selected.RemoveAt(i--);
         }
     }
 

@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 
-namespace SUSUProgramming.MusicDownloader.Music
+namespace SUSUProgramming.MusicDownloader.Music.Metadata
 {
     /// <summary>
     /// Represents a static class for loading track metadata.

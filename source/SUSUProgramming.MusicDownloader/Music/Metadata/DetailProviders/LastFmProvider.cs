@@ -6,9 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Api.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SUSUProgramming.MusicDownloader.Collections;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
+using SUSUProgramming.MusicDownloader.Persistence;
 using SUSUProgramming.MusicDownloader.Services;
 
 namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
@@ -22,7 +25,6 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
     internal class LastFmProvider(TokenStorage tokens, ApiHelper api, ILogger<LastFmProvider> logger) : TrackDetailsProvider(api, "https://last.fm/api/")
     {
         private readonly LastfmClient client = new(tokens.GetToken("LastFM"), tokens.GetSharedSecret("LastFM"), api.Client);
-        private readonly ConcurrentDictionary<(string Artist, string Name), int?> listenCountCache = [];
         private readonly ILogger<LastFmProvider> logger = logger;
 
         /// <inheritdoc/>
@@ -125,11 +127,19 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
                     return null;
                 }
 
-                if (listenCountCache.TryGetValue((artist, title), out int? listens))
+                await using var scope = App.Services.CreateAsyncScope();
+                var statsRepo = scope.ServiceProvider.GetRequiredService<ITrackStatsRepository>();
+
+                var model = await statsRepo.GetOrCreateByArtistAndTitleAsync(artist, title);
+
+                if (model is { ListenCount: int listens })
                 {
                     logger.LogTrace("Using cached listener count for: {Title} by {Artist}", title, artist);
                     return listens;
                 }
+
+                model.ArtistString = artist;
+                model.TitleString = title;
 
                 logger.LogDebug("Fetching listener count for: {Title} by {Artist}", title, artist);
                 var info = await client.Track.GetInfoAsync(title, artist);
@@ -137,13 +147,16 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
                 {
                     var track = info.Content;
                     var count = track.PlayCount;
-                    listenCountCache[(artist, title)] = count;
+                    model.ListenCount = count;
+
+                    await statsRepo.UpdateAsync(model);
                     logger.LogDebug("Found {ListenerCount} listeners for: {Title} by {Artist}", count, title, artist);
                     return count;
                 }
 
                 logger.LogWarning("Track not found on Last.FM: {Title} by {Artist}", title, artist);
-                listenCountCache[(artist, title)] = null;
+                model.ListenCount = -1;
+                await statsRepo.UpdateAsync(model);
                 return -1;
             }
             catch (Exception ex)

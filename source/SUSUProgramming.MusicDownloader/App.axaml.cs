@@ -1,6 +1,7 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -8,7 +9,10 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SUSUProgramming.MusicDownloader.Persistence;
 using SUSUProgramming.MusicDownloader.Services;
 using SUSUProgramming.MusicDownloader.ViewModels;
 using SUSUProgramming.MusicDownloader.Views;
@@ -90,5 +94,15 @@ public partial class App : Application
 
         services.AddAppServices();
         Services = services.BuildServiceProvider();
+
+        using var scope = Services.CreateScope();
+        var ctx = scope.ServiceProvider.GetRequiredService<TracksDbContext>();
+        var logger = Services.GetRequiredService<ILogger<App>>();
+        if (ctx.Database.GetPendingMigrations().Any())
+        {
+            logger.LogInformation("Track stats database has pending changes, applying migrations...");
+            ctx.Database.Migrate();
+            logger.LogInformation("Migrations are applied successfully.");
+        }
     }
 }
