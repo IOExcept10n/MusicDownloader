@@ -1,11 +1,15 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SUSUProgramming.MusicDownloader.Collections;
 using SUSUProgramming.MusicDownloader.Music;
+using SUSUProgramming.MusicDownloader.Music.Metadata;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.ViewModels;
 
@@ -20,6 +24,7 @@ namespace SUSUProgramming.MusicDownloader.Services
     public partial class TaggingConflictInfo(TrackDetails track, ObservableCollection<ITag> tags, string tagName) : ObservableObject
     {
         private static readonly TagComparer TagComparer = new();
+        private readonly Dictionary<ITag, List<string>> sourcesByTag = new(ReferenceEqualityComparer.Instance);
 
         [ObservableProperty]
         private ObservableCollection<ITag> foundData = tags;
@@ -83,16 +88,94 @@ namespace SUSUProgramming.MusicDownloader.Services
         public bool IsIndeterminate => ResolveState == ConflictResolveState.None;
 
         /// <summary>
+        /// Gets the name of the source that stands for the value already stored in the track file.
+        /// </summary>
+        public const string FileSource = "File";
+
+        /// <summary>
+        /// Gets the index in <see cref="FoundData"/> of the value already stored in the track, if there is one.
+        /// </summary>
+        public int? CurrentCase
+        {
+            get
+            {
+                for (int i = 0; i < FoundData.Count; i++)
+                {
+                    if (SourcesOf(i).Contains(FileSource))
+                        return i;
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the index in <see cref="FoundData"/> of the value reported by strictly the most distinct sources, or <see langword="null"/> on a tie.
+        /// </summary>
+        public int? RecommendedCase
+        {
+            get
+            {
+                int? best = null;
+                int bestVotes = 0;
+                bool tie = false;
+                for (int i = 0; i < FoundData.Count; i++)
+                {
+                    int votes = SourcesOf(i).Count;
+                    if (votes > bestVotes)
+                    {
+                        best = i;
+                        bestVotes = votes;
+                        tie = false;
+                    }
+                    else if (votes == bestVotes)
+                    {
+                        tie = true;
+                    }
+                }
+
+                return tie ? null : best;
+            }
+        }
+
+        /// <summary>
         /// Adds a tag to the conflict info. If there are tags with the same value, this tag won't be added.
         /// </summary>
         /// <param name="tag">Tag instance to add.</param>
-        public void Accumulate(ITag tag)
+        public void Accumulate(ITag tag) => Accumulate(tag, "?");
+
+        /// <summary>
+        /// Adds a value reported by the source. Placeholder values (zero, empty, "Unknown...") are ignored.
+        /// If the same value is already known, the source is just recorded as one more vote for it.
+        /// </summary>
+        /// <param name="tag">Tag instance to add.</param>
+        /// <param name="source">Name of the source that reported the value.</param>
+        public void Accumulate(ITag tag, string source)
         {
-            int position = FoundData.BinarySearch(tag, TagComparer);
-            if (position >= 0)
+            string? fileName = source == FileSource && Track.FilePath != null ? Path.GetFileNameWithoutExtension(Track.FilePath) : null;
+            if (!TagValuePolicy.IsMeaningful(tag, fileName))
                 return;
-            FoundData.Insert(~position, tag);
+
+            int position = FoundData.BinarySearch(tag, TagComparer);
+            ITag stored = tag;
+            if (position >= 0)
+                stored = FoundData[position];
+            else
+                FoundData.Insert(~position, tag);
+
+            if (!sourcesByTag.TryGetValue(stored, out var list))
+                sourcesByTag[stored] = list = [];
+            if (!list.Contains(source))
+                list.Add(source);
         }
+
+        /// <summary>
+        /// Gets names of the sources that reported the value at the specified position.
+        /// </summary>
+        /// <param name="index">Index of the value in <see cref="FoundData"/>.</param>
+        /// <returns>Names of the sources in the order they were recorded.</returns>
+        public IReadOnlyList<string> SourcesOf(int index) =>
+            sourcesByTag.TryGetValue(FoundData[index], out var list) ? list : [];
 
         /// <summary>
         /// Rejects the conflict.

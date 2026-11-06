@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -61,24 +62,14 @@ namespace SUSUProgramming.MusicDownloader.Services
             logger?.LogDebug("Combining results for track: {TrackName}", original.FormedTrackName);
             var combined = new TrackDetails(original);
 
-            if (settings.RewriteMetadata)
+            // A meaningful tag the track already has is never replaced here: changing it is the owner's decision made through a conflict.
+            // The RewriteMetadata setting is intentionally not consulted anymore.
+            string? fileName = original.FilePath != null ? Path.GetFileNameWithoutExtension(original.FilePath) : null;
+            foreach (var tag in result.Details)
             {
-                logger?.LogDebug("Rewriting metadata for track: {TrackName}", original.FormedTrackName);
-                foreach (var tag in result.Details)
-                {
-                    combined.SetTag(tag.Name, tag.Value);
-                }
-            }
-            else
-            {
-                logger?.LogDebug("Preserving original metadata for track: {TrackName}", original.FormedTrackName);
-                foreach (var tag in result.Details)
-                {
-                    if (!combined.ContainsKey(tag.Name))
-                    {
-                        combined.SetTag(tag.Name, tag.Value);
-                    }
-                }
+                if (combined.TryGetValue(tag.Name, out var existing) && TagValuePolicy.IsMeaningful(existing, fileName))
+                    continue;
+                combined.Add(tag);
             }
 
             logger?.LogDebug("Combined results for track: {TrackName}", original.FormedTrackName);
@@ -117,13 +108,8 @@ namespace SUSUProgramming.MusicDownloader.Services
                     logger?.LogDebug("Provider {ProviderName} found {DetailCount} details", provider.GetType().Name, details.Count);
                     foreach (var tag in details)
                     {
-                        if (!conflicts.TryGetValue(tag.Name, out var conflict))
-                        {
-                            logger?.LogTrace("Creating new conflict for tag: {TagName}", tag.Name);
-                            conflicts.Add(conflict = new(track, [], tag.Name));
-                        }
-
-                        conflict.Accumulate(tag);
+                        var conflict = GetOrCreateConflict(conflicts, track, tag.Name);
+                        conflict.Accumulate(tag, provider.GetType().Name);
                         logger?.LogTrace("Accumulated tag value for: {TagName}", tag.Name);
                     }
 
@@ -154,13 +140,8 @@ namespace SUSUProgramming.MusicDownloader.Services
 
                     logger?.LogDebug("Provider {ProviderName} found lyrics", provider.GetType().Name);
                     var lyricsTag = Tags.Lyrics + lyrics;
-                    if (!conflicts.TryGetValue(lyricsTag.Name, out var conflict))
-                    {
-                        logger?.LogTrace("Creating new conflict for lyrics tag");
-                        conflicts.Add(conflict = new(track, [], lyricsTag.Name));
-                    }
-
-                    conflict.Accumulate(lyricsTag);
+                    var conflict = GetOrCreateConflict(conflicts, track, lyricsTag.Name);
+                    conflict.Accumulate(lyricsTag, provider.GetType().Name);
                     logger?.LogTrace("Accumulated lyrics value");
                     lyricsProviderCount++;
                 }
@@ -177,6 +158,20 @@ namespace SUSUProgramming.MusicDownloader.Services
                 detailProviderCount,
                 lyricsProviderCount);
             return new(result, conflicts);
+        }
+
+        private static TaggingConflictInfo GetOrCreateConflict(ConflictsCollection conflicts, TrackDetails track, string tagName)
+        {
+            if (conflicts.TryGetValue(tagName, out var conflict))
+                return conflict;
+
+            logger?.LogTrace("Creating new conflict for tag: {TagName}", tagName);
+            conflicts.Add(conflict = new(track, [], tagName));
+
+            // The value already stored in the track is one more source, so a differing value from a provider is a conflict, not an overwrite.
+            if (track.TryGetValue(tagName, out var own))
+                conflict.Accumulate(own.Clone(), TaggingConflictInfo.FileSource);
+            return conflict;
         }
     }
 }

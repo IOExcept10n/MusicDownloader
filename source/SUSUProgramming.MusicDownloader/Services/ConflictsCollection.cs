@@ -20,8 +20,14 @@ namespace SUSUProgramming.MusicDownloader.Services
             for (int i = 0; i < Items.Count; i++)
             {
                 TaggingConflictInfo? conflict = Items[i];
-                if (conflict.FoundData.Count == 1)
+                if (conflict.FoundData.Count == 0)
                 {
+                    // Only placeholder values were reported: nothing to choose from.
+                    RemoveAt(i--);
+                }
+                else if (conflict.FoundData.Count == 1)
+                {
+                    // The only known value is either new or the one already on the track, so nobody is overwritten.
                     result.Add(conflict.FoundData[0]);
                     RemoveAt(i--);
                 }
