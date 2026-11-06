@@ -120,8 +120,6 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
     internal partial class TrackViewModel : ViewModelBase
     {
         private static readonly Bitmap EmptyCover = new(AssetLoader.Open(new("avares://SUSUProgramming.MusicDownloader/Assets/music.png")));
-        private static readonly string[] RecommendedTags = [nameof(Album), nameof(Genres), nameof(Year), nameof(Track)];
-        private static readonly string[] RequiredTags = [nameof(Title), nameof(Performers)];
         private static ILogger<TrackViewModel>? logger;
         private readonly TrackDetails track;
         private readonly DelayedNotifier listenStatusUpdater;
@@ -401,12 +399,12 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public void Refresh()
         {
             logger?.LogDebug("Refreshing track: {TrackName}", track.FormedTrackName);
-            foreach (var property in RequiredTags)
+            foreach (var property in TagCompleteness.Required)
             {
                 OnPropertyChanged(property);
             }
 
-            foreach (var property in RecommendedTags)
+            foreach (var property in TagCompleteness.Recommended)
             {
                 OnPropertyChanged(property);
             }
@@ -427,22 +425,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         {
             logger?.LogDebug("Resetting state for track: {TrackName}", track.FormedTrackName);
             listenStatusUpdater.NotifyUpdate();
-            if (RequiredTags.All(track.Contains))
-            {
-                if (RecommendedTags.All(track.Contains) && track.HasCover)
-                {
-                    logger?.LogDebug("Track {TrackName} is complete", track.FormedTrackName);
-                    State = TrackProcessingState.Complete;
-                    return;
-                }
-
-                logger?.LogDebug("Track {TrackName} is incomplete", track.FormedTrackName);
-                State = TrackProcessingState.Incomplete;
-                return;
-            }
-
-            logger?.LogDebug("Track {TrackName} is untagged", track.FormedTrackName);
-            State = TrackProcessingState.Untagged;
+            State = TagCompleteness.Evaluate(track);
+            logger?.LogDebug("Track {TrackName} state: {State}", track.FormedTrackName, State);
         }
 
         /// <summary>
