@@ -104,9 +104,9 @@
 						   Text="{Binding AutoTagger.Conflicts.Count}"/>
 				<Button Grid.Column="3"
 						Margin="2"
-						IsVisible="{Binding AutoTagger.HasConflicts}"
+						IsVisible="{Binding AutoTagger.HasResults}"
 						IsEnabled="{Binding AutoTagger.IsFinished}"
-						Content="{x:Static lang:Resources.ResolveConflicts}"
+						Content="{x:Static lang:Resources.TaggingResultsTitle}"
 						VerticalAlignment="Center"
 						ToolTip.Tip="{x:Static lang:Resources.ConflictsTip}"
 						Click="OnResolveConflictsClick"

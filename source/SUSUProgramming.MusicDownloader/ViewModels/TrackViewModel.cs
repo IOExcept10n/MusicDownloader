@@ -117,7 +117,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
     /// <summary>
     /// Represents a view model for the track details.
     /// </summary>
-    internal partial class TrackViewModel : ViewModelBase
+    internal partial class TrackViewModel : ViewModelBase, ITaggedTrack
     {
         private static readonly Bitmap EmptyCover = new(AssetLoader.Open(new("avares://SUSUProgramming.MusicDownloader/Assets/music.png")));
         private static ILogger<TrackViewModel>? logger;
