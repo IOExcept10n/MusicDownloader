@@ -51,18 +51,24 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
                 DateTimeOffset? releaseDate = null;
                 uint? trackNumber = null, trackCount = null;
                 Uri? image = null;
-                if (artist != null && track.AlbumName != null)
+                if (track.AlbumName != null)
                 {
                     try
                     {
                         logger.LogDebug("Fetching album info for: {AlbumName}", track.AlbumName);
-                        var albumInfo = await client.Album.GetInfoAsync(artist, track.AlbumName, true);
+
+                        // Last.fm knows the album under its own artist name, which may differ from the local one.
+                        var albumInfo = await client.Album.GetInfoAsync(track.ArtistName ?? artist, track.AlbumName, true);
                         if (albumInfo.Success)
                         {
                             var album = albumInfo.Content;
                             image = album.Images.Largest;
-                            releaseDate = album.ReleaseDateUtc;
-                            trackNumber = (uint)(album.Tracks.IndexOfFirst(x => x.Name == title) + 1);
+                            if (album.ReleaseDateUtc is { Year: >= 1900 } albumDate)
+                                releaseDate = albumDate;
+
+                            int position = TrackTitleMatcher.IndexOfTitle(album.Tracks.Select(x => x.Name), track.Name);
+                            if (position >= 0)
+                                trackNumber = (uint)(position + 1);
                             trackCount = (uint)album.Tracks.CountOrDefault();
                             logger.LogDebug(
                                 "Found album info: Release date: {ReleaseDate}, Track number: {TrackNumber}, Total tracks: {TrackCount}",
