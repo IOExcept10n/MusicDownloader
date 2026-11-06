@@ -400,3 +400,6 @@ source.zip
 
 # Visual companion mockups
 .superpowers/
+
+# Claude Code worktrees
+.claude/worktrees/
