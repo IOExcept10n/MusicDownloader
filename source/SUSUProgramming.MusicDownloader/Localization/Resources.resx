@@ -482,4 +482,13 @@
   <data name="FindCoverInBrowser" xml:space="preserve">
     <value>Find cover in browser</value>
   </data>
+  <data name="TaggingReasonNotFound" xml:space="preserve">
+    <value>Nothing found</value>
+  </data>
+  <data name="TaggingReasonError" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="TaggingReasonSaveError" xml:space="preserve">
+    <value>Not saved: {0}</value>
+  </data>
 </root>

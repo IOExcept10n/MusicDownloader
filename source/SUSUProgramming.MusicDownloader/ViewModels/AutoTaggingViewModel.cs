@@ -97,12 +97,49 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         {
             foreach (var item in Items.Where(x => x.IsReady && !x.IsApplied).ToList())
             {
-                item.Track.Save();
-                item.IsApplied = true;
+                // One locked file must not stop the others, nor take the app down.
+                try
+                {
+                    item.Track.Save();
+                    item.SaveError = null;
+                    item.IsApplied = true;
+                }
+                catch (Exception ex)
+                {
+                    item.SaveError = ex.Message;
+                }
             }
 
             NotifyResultsChanged();
         }
+
+        /// <summary>
+        /// Determines whether the tagging run found nothing at all for the track: neither values nor conflicts.
+        /// </summary>
+        /// <param name="result">Result of the tagging run.</param>
+        /// <returns><see langword="true"/> if there is nothing to apply and nothing to choose from.</returns>
+        internal static bool NothingFound(TaggingResult result) => result.Details.Count == 0 && result.Conflicts.Count == 0;
+
+        /// <summary>
+        /// Adds a result row for a tagged track.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <param name="conflicts">Its conflicts.</param>
+        /// <param name="alreadySaved">Whether the tags were already written to the file during the run.</param>
+        /// <returns>The added row.</returns>
+        internal TaggingResultItemViewModel AddResult(ITaggedTrack track, IReadOnlyList<TaggingConflictInfo> conflicts, bool alreadySaved)
+        {
+            var item = new TaggingResultItemViewModel(track, conflicts) { IsApplied = alreadySaved };
+            Items.Add(item);
+            return item;
+        }
+
+        /// <summary>
+        /// Adds a result row for a track that could not be tagged.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <param name="reason">Text that explains what happened.</param>
+        internal void AddFailure(ITaggedTrack track, string reason) => Items.Add(TaggingResultItemViewModel.Failed(track, reason));
 
         private void OnItemsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -156,46 +193,67 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
 
             foreach (var vm in vms)
             {
+                List<TaggingConflictInfo>? found = null;
+                string? failure = null;
                 try
                 {
                     var result = await tagger.TagAsync(vm.Model);
-                    if (result.Details.Count == 0)
+                    if (NothingFound(result))
                     {
                         vm.State = TrackProcessingState.TagsNotFound;
-                        continue;
+                        failure = Resources.TaggingReasonNotFound;
                     }
-
-                    TrackDetails details;
-                    details = TagService.CombineResults(settings, vm.Model, result);
-                    vm.Model.Clear();
-                    foreach (var tag in details)
-                        vm.Model.Add(tag);
-                    bool hasConflicts = false;
-                    foreach (var conflict in result.Conflicts)
-                    {
-                        Conflicts.Add(conflict);
-                        hasConflicts = true;
-                    }
-
-                    Items.Add(new TaggingResultItemViewModel(vm, [.. result.Conflicts]));
-
-                    if (hasConflicts)
-                        vm.State = TrackProcessingState.Conflicting;
                     else
-                        vm.State = TrackProcessingState.Success;
-                    OnPropertyChanged(nameof(HasConflicts));
-                    ProcessedCount++;
+                    {
+                        TrackDetails details;
+                        details = TagService.CombineResults(settings, vm.Model, result);
+                        vm.Model.Clear();
+                        foreach (var tag in details)
+                            vm.Model.Add(tag);
+                        bool hasConflicts = false;
+                        foreach (var conflict in result.Conflicts)
+                        {
+                            Conflicts.Add(conflict);
+                            hasConflicts = true;
+                        }
+
+                        found = [.. result.Conflicts];
+
+                        if (hasConflicts)
+                            vm.State = TrackProcessingState.Conflicting;
+                        else
+                            vm.State = TrackProcessingState.Success;
+                        OnPropertyChanged(nameof(HasConflicts));
+                        ProcessedCount++;
+                    }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Tagging error: {ex}");
                     vm.State = TrackProcessingState.Fault;
+                    failure = string.Format(Resources.Culture, Resources.TaggingReasonError, ex.Message);
                 }
 
+                bool saved = false;
                 if (vm.State == TrackProcessingState.Success && settings.AutoSaveTags)
                 {
-                    vm.Save();
+                    try
+                    {
+                        vm.Save();
+                        saved = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        vm.State = TrackProcessingState.Fault;
+                        failure = string.Format(Resources.Culture, Resources.TaggingReasonSaveError, ex.Message);
+                    }
                 }
+
+                // Every processed track gets a row, so nothing is lost silently.
+                if (failure != null)
+                    AddFailure(vm, failure);
+                else if (found != null)
+                    AddResult(vm, found, saved);
 
                 vm.Refresh();
             }

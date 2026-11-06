@@ -65,8 +65,13 @@ namespace SUSUProgramming.MusicDownloader.Services
             // A meaningful tag the track already has is never replaced here: changing it is the owner's decision made through a conflict.
             // The RewriteMetadata setting is intentionally not consulted anymore.
             string? fileName = original.FilePath != null ? Path.GetFileNameWithoutExtension(original.FilePath) : null;
+
+            // The file has a cover that has not been loaded (covers are read lazily), so a found cover must not replace it unseen.
+            bool coverUnknown = HasUnloadedCover(original);
             foreach (var tag in result.Details)
             {
+                if (coverUnknown && tag.Name == nameof(CoverTag.Cover))
+                    continue;
                 if (combined.TryGetValue(tag.Name, out var existing) && TagValuePolicy.IsMeaningful(existing, fileName))
                     continue;
                 combined.Add(tag);
@@ -88,6 +93,22 @@ namespace SUSUProgramming.MusicDownloader.Services
             int detailProviderCount = 0;
             int lyricsProviderCount = 0;
 
+            // Covers are read lazily, so load the file's cover first: it must take part in the conflict like any other value.
+            if (HasUnloadedCover(track) && track.FilePath != null)
+            {
+                try
+                {
+                    MetadataManager.RestoreCover(track);
+                }
+                catch (Exception ex)
+                {
+                    logger?.LogWarning(ex, "Couldn't load the existing cover of {TrackName}", track.FormedTrackName);
+                }
+            }
+
+            // If it still could not be loaded, a found cover must never be applied over it.
+            bool coverUnknown = HasUnloadedCover(track);
+
             // Step 1: search for details:
             foreach (var provider in DetailsProviders)
             {
@@ -108,6 +129,8 @@ namespace SUSUProgramming.MusicDownloader.Services
                     logger?.LogDebug("Provider {ProviderName} found {DetailCount} details", provider.GetType().Name, details.Count);
                     foreach (var tag in details)
                     {
+                        if (coverUnknown && tag.Name == nameof(CoverTag.Cover))
+                            continue;
                         var conflict = GetOrCreateConflict(conflicts, track, tag.Name);
                         conflict.Accumulate(tag, provider.GetType().Name);
                         logger?.LogTrace("Accumulated tag value for: {TagName}", tag.Name);
@@ -159,6 +182,9 @@ namespace SUSUProgramming.MusicDownloader.Services
                 lyricsProviderCount);
             return new(result, conflicts);
         }
+
+        private static bool HasUnloadedCover(TrackDetails track) =>
+            track.HasCover && !track.ContainsKey(nameof(CoverTag.Cover));
 
         private static TaggingConflictInfo GetOrCreateConflict(ConflictsCollection conflicts, TrackDetails track, string tagName)
         {

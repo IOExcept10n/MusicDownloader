@@ -67,20 +67,28 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
             if (!recording.TryGetProperty("releases", out var releases) || releases.ValueKind != JsonValueKind.Array || releases.GetArrayLength() == 0)
                 return null;
 
+            // An official album beats everything else (a lead single usually comes out before the album and would give the wrong album and track number);
+            // within the same kind the earliest dated release wins.
             JsonElement? best = null;
-            uint bestYear = uint.MaxValue;
+            (int Kind, uint Year) bestKey = (int.MaxValue, uint.MaxValue);
             foreach (var release in releases.EnumerateArray())
             {
                 uint year = ParseYear(GetString(release, "date"));
-                if (year != 0 && year < bestYear)
+                var key = (IsOfficialAlbum(release) ? 0 : 1, year == 0 ? uint.MaxValue : year);
+                if (best == null || key.CompareTo(bestKey) < 0)
                 {
                     best = release;
-                    bestYear = year;
+                    bestKey = key;
                 }
             }
 
-            return best ?? releases[0];
+            return best;
         }
+
+        private static bool IsOfficialAlbum(JsonElement release) =>
+            GetString(release, "status") == "Official" &&
+            release.TryGetProperty("release-group", out var group) &&
+            GetString(group, "primary-type") == "Album";
 
         private static string[] GetArtists(JsonElement recording)
         {

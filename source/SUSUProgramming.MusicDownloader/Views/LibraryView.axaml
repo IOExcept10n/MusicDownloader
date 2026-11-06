@@ -159,7 +159,7 @@
 										Margin="10 2"
 										Content="{x:Static lang:Resources.FindLyricsInBrowser}"
 										Click="OnFindLyricsInBrowserClick"/>
-							<TextBox Grid.ColumnSpan="2"
+							<TextBox Grid.ColumnSpan="3"
 									 Grid.Row="1"
 									 Grid.RowSpan="2"
 									 Margin="3"

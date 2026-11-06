@@ -18,6 +18,10 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         [ObservableProperty]
         private bool isApplied;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Reason))]
+        private string? saveError;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TaggingResultItemViewModel"/> class.
         /// </summary>
@@ -36,9 +40,23 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         }
 
         /// <summary>
+        /// Gets the reason the track could not be tagged at all (nothing found, an error), or <see langword="null"/>.
+        /// </summary>
+        public string? FailureReason { get; private init; }
+
+        /// <summary>
         /// Gets the tagged track.
         /// </summary>
         public ITaggedTrack Track { get; }
+
+        /// <summary>
+        /// Creates a result row for a track that could not be tagged.
+        /// </summary>
+        /// <param name="track">The track.</param>
+        /// <param name="reason">Text that explains what happened.</param>
+        /// <returns>A row that is never ready and shows the reason.</returns>
+        public static TaggingResultItemViewModel Failed(ITaggedTrack track, string reason) =>
+            new(track, []) { FailureReason = reason };
 
         /// <summary>
         /// Gets the conflicts found for the track.
@@ -63,7 +81,7 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         /// <summary>
         /// Gets a value indicating whether the track can be applied without review.
         /// </summary>
-        public bool IsReady => TagCompleteness.IsReady(Track.Model, HasUnresolvedConflicts);
+        public bool IsReady => FailureReason == null && TagCompleteness.IsReady(Track.Model, HasUnresolvedConflicts);
 
         /// <summary>
         /// Gets a value indicating whether the track needs the owner's review.
@@ -77,7 +95,11 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         {
             get
             {
-                var unresolved = ConflictInfos.Where(x => x.IsIndeterminate).Select(x => x.TagName).ToList();
+                if (FailureReason != null)
+                    return FailureReason;
+                if (SaveError != null)
+                    return string.Format(Resources.Culture, Resources.TaggingReasonSaveError, SaveError);
+                var unresolved =ConflictInfos.Where(x => x.IsIndeterminate).Select(x => x.TagName).ToList();
                 if (unresolved.Count > 0)
                     return string.Format(Resources.Culture, Resources.TaggingReasonConflicts, string.Join(", ", unresolved));
                 if (!TagCompleteness.Required.All(Track.Model.Contains))

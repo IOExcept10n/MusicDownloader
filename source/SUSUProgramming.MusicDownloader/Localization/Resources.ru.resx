@@ -477,4 +477,13 @@
   <data name="FindCoverInBrowser" xml:space="preserve">
     <value>Найти обложку в браузере</value>
   </data>
+  <data name="TaggingReasonNotFound" xml:space="preserve">
+    <value>Ничего не найдено</value>
+  </data>
+  <data name="TaggingReasonError" xml:space="preserve">
+    <value>Ошибка: {0}</value>
+  </data>
+  <data name="TaggingReasonSaveError" xml:space="preserve">
+    <value>Не сохранено: {0}</value>
+  </data>
 </root>

@@ -1139,5 +1139,32 @@ namespace SUSUProgramming.MusicDownloader.Localization {
                 return ResourceManager.GetString("FindCoverInBrowser", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing found.
+        /// </summary>
+        public static string TaggingReasonNotFound {
+            get {
+                return ResourceManager.GetString("TaggingReasonNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string TaggingReasonError {
+            get {
+                return ResourceManager.GetString("TaggingReasonError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not saved: {0}.
+        /// </summary>
+        public static string TaggingReasonSaveError {
+            get {
+                return ResourceManager.GetString("TaggingReasonSaveError", resourceCulture);
+            }
+        }
     }
 }

@@ -116,6 +116,14 @@ namespace SUSUProgramming.MusicDownloader.Services
         {
             get
             {
+                // For covers the biggest picture is the suggestion; the sources always disagree on the address, so voting says nothing.
+                if (TagName == nameof(CoverTag.Cover))
+                {
+                    int? largest = CoverRanking.IndexOfLargest([.. FoundData.Select(CoverPixels)]);
+                    if (largest != null)
+                        return largest;
+                }
+
                 int? best = null;
                 int bestVotes = 0;
                 bool tie = false;
@@ -167,6 +175,13 @@ namespace SUSUProgramming.MusicDownloader.Services
                 sourcesByTag[stored] = list = [];
             if (!list.Contains(source))
                 list.Add(source);
+        }
+
+        private static long? CoverPixels(ITag tag)
+        {
+            if (tag is not CoverTag { Cover.Data: { } data })
+                return null;
+            return ImageSize.TryRead(data.Data) is { } size ? (long)size.Width * size.Height : null;
         }
 
         /// <summary>
