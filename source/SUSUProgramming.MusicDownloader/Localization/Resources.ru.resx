@@ -471,4 +471,10 @@
   <data name="CurrentMark" xml:space="preserve">
     <value>Сейчас в файле</value>
   </data>
+  <data name="FindLyricsInBrowser" xml:space="preserve">
+    <value>Найти текст песни в браузере</value>
+  </data>
+  <data name="FindCoverInBrowser" xml:space="preserve">
+    <value>Найти обложку в браузере</value>
+  </data>
 </root>

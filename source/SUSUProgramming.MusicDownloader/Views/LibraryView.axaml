@@ -142,7 +142,7 @@
 									 HorizontalAlignment="Stretch"/>
 						</Grid>
 						<!--Lyrics-->
-						<Grid ColumnDefinitions="125,*" RowDefinitions="40,Auto">
+						<Grid ColumnDefinitions="125,*,*" RowDefinitions="40,Auto">
 							<TextBlock Text="{x:Static lang:Resources.TrackLyrics}"
 										VerticalAlignment="Center"
 										HorizontalAlignment="Center"
@@ -153,6 +153,12 @@
 									Margin="10 2"
 									Content="{x:Static lang:Resources.Load}"
 									Click="OnLoadClick"/>
+							<Button Grid.Column="2"
+										HorizontalAlignment="Stretch"
+										HorizontalContentAlignment="Center"
+										Margin="10 2"
+										Content="{x:Static lang:Resources.FindLyricsInBrowser}"
+										Click="OnFindLyricsInBrowserClick"/>
 							<TextBox Grid.ColumnSpan="2"
 									 Grid.Row="1"
 									 Grid.RowSpan="2"
@@ -225,6 +231,8 @@
 									  Click="OnCoverFromClipboardSelected"/>
 							<MenuItem Header="{x:Static lang:Resources.SetFromFile}"
 									  Click="OnCoverFromFileSelected"/>
+						<MenuItem Header="{x:Static lang:Resources.FindCoverInBrowser}"
+									  Click="OnFindCoverInBrowserClick"/>
 							<MenuItem Header="{x:Static lang:Resources.DeleteCover}"
 									  Click="OnDeleteCoverSelected"/>
 						</ContextMenu>

@@ -2,10 +2,12 @@
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
 using System.IO;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 using SUSUProgramming.MusicDownloader.Music;
+using SUSUProgramming.MusicDownloader.Services;
 using SUSUProgramming.MusicDownloader.ViewModels;
 
 namespace SUSUProgramming.MusicDownloader.Views;
@@ -96,6 +98,20 @@ public sealed partial class LibraryView : UserControl, IDisposable
         if (DataContext is not LibraryViewModel library)
             return;
         await library.EditingModel.SetCoverFromClipboardAsync();
+    }
+
+    private void OnFindLyricsInBrowserClick(object? sender, RoutedEventArgs e) => OpenWebSearch(WebSearchLauncher.LyricsQuery);
+
+    private void OnFindCoverInBrowserClick(object? sender, RoutedEventArgs e) => OpenWebSearch(WebSearchLauncher.CoverQuery);
+
+    private void OpenWebSearch(Func<string, string, Uri> buildQuery)
+    {
+        if (DataContext is not LibraryViewModel library)
+            return;
+        var track = library.SelectedTracks.FirstOrDefault();
+        if (track == null)
+            return;
+        WebSearchLauncher.Open(buildQuery(track.Model.FormedArtistString, track.Model.FormedTitle));
     }
 
     private async void OnCoverFromFileSelected(object? sender, RoutedEventArgs e)

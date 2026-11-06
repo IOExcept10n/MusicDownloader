@@ -1121,5 +1121,23 @@ namespace SUSUProgramming.MusicDownloader.Localization {
                 return ResourceManager.GetString("CurrentMark", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Find lyrics in browser.
+        /// </summary>
+        public static string FindLyricsInBrowser {
+            get {
+                return ResourceManager.GetString("FindLyricsInBrowser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Find cover in browser.
+        /// </summary>
+        public static string FindCoverInBrowser {
+            get {
+                return ResourceManager.GetString("FindCoverInBrowser", resourceCulture);
+            }
+        }
     }
 }

@@ -476,4 +476,10 @@
   <data name="CurrentMark" xml:space="preserve">
     <value>Currently in file</value>
   </data>
+  <data name="FindLyricsInBrowser" xml:space="preserve">
+    <value>Find lyrics in browser</value>
+  </data>
+  <data name="FindCoverInBrowser" xml:space="preserve">
+    <value>Find cover in browser</value>
+  </data>
 </root>
