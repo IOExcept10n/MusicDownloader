@@ -118,7 +118,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
 
         private void UpdateCover()
         {
-            cover?.Dispose();
+            // The previous bitmap may still be shown by the UI, so it is left to the garbage collector instead of being disposed.
+            isCoverDirty = false;
             var data = (Tag as CoverTag)?.Cover?.Data;
             if (data == null)
                 return;
