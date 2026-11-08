@@ -123,8 +123,8 @@ namespace SUSUProgramming.MusicDownloader.Music
                     return UnknownTitle;
                 }
 
-                if (TryGetTag<string>(nameof(Tag.Subtitle), out var subtitle) && !string.IsNullOrWhiteSpace(subtitle))
-                    return $"{title} ({subtitle})";
+                //if (TryGetTag<string>(nameof(Tag.Subtitle), out var subtitle) && !string.IsNullOrWhiteSpace(subtitle))
+                //    return $"{title} ({subtitle})";
 
                 return title;
             }
@@ -191,6 +191,29 @@ namespace SUSUProgramming.MusicDownloader.Music
         /// <param name="name">Name of the tag to access.</param>
         /// <returns>Value of the tag.</returns>
         public T GetTag<T>(string name) => (T)this[name].Value!;
+
+        /// <summary>
+        /// Sets the value to the specified tag.
+        /// </summary>
+        /// <typeparam name="T">Type of the value to use.</typeparam>
+        /// <param name="name">Name of the tag to access.</param>
+        /// <param name="value">Value to store.</param>
+        public void Set(string name, object? value)
+        {
+            if (TryGetValue(name, out var t))
+            {
+                t.Value = value;
+                if (!t.HasValue)
+                    Remove(t);
+            }
+            else if (Tags.AllTags.FirstOrDefault(x => x.Name == name) is ITag tag)
+            {
+                t = tag.Clone();
+                t.Value = value;
+                if (t.HasValue)
+                    Add(t);
+            }
+        }
 
         /// <summary>
         /// Sets the value to the specified tag.
