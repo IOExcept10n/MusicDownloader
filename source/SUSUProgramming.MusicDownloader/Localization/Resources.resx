@@ -449,4 +449,46 @@
   <data name="BackupOnAutoSave" xml:space="preserve">
     <value>Create track backups before auto tagging</value>
   </data>
+  <data name="TaggingReasonConflicts" xml:space="preserve">
+    <value>Conflict: {0}</value>
+  </data>
+  <data name="TaggingReasonMissingRequired" xml:space="preserve">
+    <value>No title or artist</value>
+  </data>
+  <data name="TaggingResultsTitle" xml:space="preserve">
+    <value>Tagging results</value>
+  </data>
+  <data name="TaggingResultsSummary" xml:space="preserve">
+    <value>Found: {0} · ready: {1} · to review: {2}</value>
+  </data>
+  <data name="ApplyReadyTracks" xml:space="preserve">
+    <value>Apply ready ({0})</value>
+  </data>
+  <data name="ReviewTrack" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="SourcesLabel" xml:space="preserve">
+    <value>Sources</value>
+  </data>
+  <data name="RecommendedMark" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="CurrentMark" xml:space="preserve">
+    <value>Currently in file</value>
+  </data>
+  <data name="FindLyricsInBrowser" xml:space="preserve">
+    <value>Find lyrics in browser</value>
+  </data>
+  <data name="FindCoverInBrowser" xml:space="preserve">
+    <value>Find cover in browser</value>
+  </data>
+  <data name="TaggingReasonNotFound" xml:space="preserve">
+    <value>Nothing found</value>
+  </data>
+  <data name="TaggingReasonError" xml:space="preserve">
+    <value>Error: {0}</value>
+  </data>
+  <data name="TaggingReasonSaveError" xml:space="preserve">
+    <value>Not saved: {0}</value>
+  </data>
 </root>

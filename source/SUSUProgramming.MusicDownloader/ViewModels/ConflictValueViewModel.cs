@@ -1,9 +1,11 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System.IO;
+using System.Linq;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using SUSUProgramming.MusicDownloader.Localization;
 using SUSUProgramming.MusicDownloader.Music.Metadata.ID3;
 using SUSUProgramming.MusicDownloader.Services;
 
@@ -77,6 +79,36 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
         public string? Text => Tag.Value is string[] s ? string.Join(", ", s) : Tag.Value?.ToString();
 
         /// <summary>
+        /// Gets a value indicating whether most sources agree on this value (a suggestion only, the owner decides).
+        /// </summary>
+        public bool IsRecommended => ownerConflict.RecommendedCase == ownerConflict.FoundData.IndexOf(Tag);
+
+        /// <summary>
+        /// Gets a value indicating whether this is the value already stored in the track file.
+        /// </summary>
+        public bool IsCurrent => ownerConflict.CurrentCase == ownerConflict.FoundData.IndexOf(Tag);
+
+        /// <summary>
+        /// Gets a value indicating whether the value has any marks to show.
+        /// </summary>
+        public bool HasMarks => IsRecommended || IsCurrent;
+
+        /// <summary>
+        /// Gets the text with the marks ("Recommended", "Currently in file").
+        /// </summary>
+        public string MarksText => string.Join(" · ", new[] { IsRecommended ? Resources.RecommendedMark : null, IsCurrent ? Resources.CurrentMark : null }.Where(x => x != null));
+
+        /// <summary>
+        /// Gets the text with the names of the sources that reported this value.
+        /// </summary>
+        public string SourcesText => $"{Resources.SourcesLabel}: {string.Join(", ", ownerConflict.SourcesOf(ownerConflict.FoundData.IndexOf(Tag)))}";
+
+        /// <summary>
+        /// Gets the pixel size of the cover, or an empty string for text values and unreadable covers.
+        /// </summary>
+        public string SizeText => IsImage && Image is { } bitmap && !ReferenceEquals(bitmap, EmptyCover) ? $"{bitmap.PixelSize.Width}×{bitmap.PixelSize.Height} px" : string.Empty;
+
+        /// <summary>
         /// Selects current value as solution to conflict.
         /// </summary>
         public void Select()
@@ -86,7 +118,8 @@ namespace SUSUProgramming.MusicDownloader.ViewModels
 
         private void UpdateCover()
         {
-            cover?.Dispose();
+            // The previous bitmap may still be shown by the UI, so it is left to the garbage collector instead of being disposed.
+            isCoverDirty = false;
             var data = (Tag as CoverTag)?.Cover?.Data;
             if (data == null)
                 return;

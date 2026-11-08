@@ -83,6 +83,22 @@
 															   HorizontalAlignment="Center"
 															   TextAlignment="Center"
 															   FontSize="16"/>
+														<StackPanel VerticalAlignment="Bottom"
+																	HorizontalAlignment="Center"
+																	Spacing="2">
+															<TextBlock Text="{Binding MarksText}"
+																	   IsVisible="{Binding HasMarks}"
+																	   FontSize="12"
+																	   FontWeight="Bold"
+																	   TextAlignment="Center"/>
+															<TextBlock Text="{Binding SizeText}"
+																	   IsVisible="{Binding IsImage}"
+																	   FontSize="12"/>
+															<TextBlock Text="{Binding SourcesText}"
+																	   FontSize="12"
+																	   TextWrapping="Wrap"
+																	   TextAlignment="Center"/>
+														</StackPanel>
 												</Grid>
 											</Button>
 										</DataTemplate>

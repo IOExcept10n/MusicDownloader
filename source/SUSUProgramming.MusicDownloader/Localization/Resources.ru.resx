@@ -444,4 +444,46 @@
   <data name="BackupOnAutoSave" xml:space="preserve">
     <value>Создавать резервные копии треков перед поиском тегов</value>
   </data>
+  <data name="TaggingReasonConflicts" xml:space="preserve">
+    <value>Конфликт: {0}</value>
+  </data>
+  <data name="TaggingReasonMissingRequired" xml:space="preserve">
+    <value>Нет названия или исполнителя</value>
+  </data>
+  <data name="TaggingResultsTitle" xml:space="preserve">
+    <value>Результаты поиска тегов</value>
+  </data>
+  <data name="TaggingResultsSummary" xml:space="preserve">
+    <value>Найдено: {0} · готово: {1} · проверить: {2}</value>
+  </data>
+  <data name="ApplyReadyTracks" xml:space="preserve">
+    <value>Применить готовые ({0})</value>
+  </data>
+  <data name="ReviewTrack" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="SourcesLabel" xml:space="preserve">
+    <value>Источники</value>
+  </data>
+  <data name="RecommendedMark" xml:space="preserve">
+    <value>Рекомендуется</value>
+  </data>
+  <data name="CurrentMark" xml:space="preserve">
+    <value>Сейчас в файле</value>
+  </data>
+  <data name="FindLyricsInBrowser" xml:space="preserve">
+    <value>Найти текст песни в браузере</value>
+  </data>
+  <data name="FindCoverInBrowser" xml:space="preserve">
+    <value>Найти обложку в браузере</value>
+  </data>
+  <data name="TaggingReasonNotFound" xml:space="preserve">
+    <value>Ничего не найдено</value>
+  </data>
+  <data name="TaggingReasonError" xml:space="preserve">
+    <value>Ошибка: {0}</value>
+  </data>
+  <data name="TaggingReasonSaveError" xml:space="preserve">
+    <value>Не сохранено: {0}</value>
+  </data>
 </root>

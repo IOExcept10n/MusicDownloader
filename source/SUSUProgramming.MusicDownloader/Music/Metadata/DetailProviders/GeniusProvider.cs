@@ -1,6 +1,7 @@
 ﻿// Copyright 2024 (c) IOExcept10n (contact https://github.com/IOExcept10n)
 // Distributed under MIT license. See LICENSE.md file in the project root for more information
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -37,10 +38,25 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
             var hits = response.response?.hits;
             if (hits is not null && Enumerable.Any(hits))
             {
-                int? id = hits![0]?.result?.id;
-                if (id != null)
+                var candidates = new List<GeniusHit>();
+                foreach (dynamic hit in hits!)
                 {
-                    string? url = hits![0]?.result?.url;
+                    try
+                    {
+                        dynamic found = hit!.result;
+                        candidates.Add(new GeniusHit((int)found.id, (string)found.title, (string)found.artist_names, (string)found.url));
+                    }
+                    catch
+                    {
+                        // A malformed hit is just skipped.
+                    }
+                }
+
+                // Genius often puts a different song first, so the hit must actually match the track.
+                if (PickMatchingHit(candidates, prototype.FormedTitle, prototype.FormedArtistString) is { } picked)
+                {
+                    int id = picked.Id;
+                    string url = picked.Url;
                     string? lyrics = null;
                     if (!string.IsNullOrEmpty(url))
                     {
@@ -86,6 +102,24 @@ namespace SUSUProgramming.MusicDownloader.Music.Metadata.DetailProviders
                         ];
                     }
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Picks the first of the top search hits that is really the requested track.
+        /// </summary>
+        /// <param name="hits">Search hits in the order Genius returned them.</param>
+        /// <param name="title">Title of the track to look for.</param>
+        /// <param name="artist">Artist string of the track to look for.</param>
+        /// <returns>The matching hit or <see langword="null"/> if none of the first five hits matches.</returns>
+        internal static GeniusHit? PickMatchingHit(IEnumerable<GeniusHit> hits, string title, string artist)
+        {
+            foreach (var hit in hits.Take(5))
+            {
+                if (TrackTitleMatcher.IsSameTrack(title, artist, hit.Title, hit.ArtistNames))
+                    return hit;
             }
 
             return null;

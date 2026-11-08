@@ -1040,5 +1040,131 @@ namespace SUSUProgramming.MusicDownloader.Localization {
                 return ResourceManager.GetString("YouHaveConflictedTags", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Conflict: {0}.
+        /// </summary>
+        public static string TaggingReasonConflicts {
+            get {
+                return ResourceManager.GetString("TaggingReasonConflicts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No title or artist.
+        /// </summary>
+        public static string TaggingReasonMissingRequired {
+            get {
+                return ResourceManager.GetString("TaggingReasonMissingRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Tagging results.
+        /// </summary>
+        public static string TaggingResultsTitle {
+            get {
+                return ResourceManager.GetString("TaggingResultsTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Found: {0} · ready: {1} · to review: {2}.
+        /// </summary>
+        public static string TaggingResultsSummary {
+            get {
+                return ResourceManager.GetString("TaggingResultsSummary", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Apply ready ({0}).
+        /// </summary>
+        public static string ApplyReadyTracks {
+            get {
+                return ResourceManager.GetString("ApplyReadyTracks", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Review.
+        /// </summary>
+        public static string ReviewTrack {
+            get {
+                return ResourceManager.GetString("ReviewTrack", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sources.
+        /// </summary>
+        public static string SourcesLabel {
+            get {
+                return ResourceManager.GetString("SourcesLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended.
+        /// </summary>
+        public static string RecommendedMark {
+            get {
+                return ResourceManager.GetString("RecommendedMark", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Currently in file.
+        /// </summary>
+        public static string CurrentMark {
+            get {
+                return ResourceManager.GetString("CurrentMark", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Find lyrics in browser.
+        /// </summary>
+        public static string FindLyricsInBrowser {
+            get {
+                return ResourceManager.GetString("FindLyricsInBrowser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Find cover in browser.
+        /// </summary>
+        public static string FindCoverInBrowser {
+            get {
+                return ResourceManager.GetString("FindCoverInBrowser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing found.
+        /// </summary>
+        public static string TaggingReasonNotFound {
+            get {
+                return ResourceManager.GetString("TaggingReasonNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string TaggingReasonError {
+            get {
+                return ResourceManager.GetString("TaggingReasonError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Not saved: {0}.
+        /// </summary>
+        public static string TaggingReasonSaveError {
+            get {
+                return ResourceManager.GetString("TaggingReasonSaveError", resourceCulture);
+            }
+        }
     }
 }

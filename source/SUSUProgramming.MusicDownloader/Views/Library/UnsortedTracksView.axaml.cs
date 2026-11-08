@@ -163,7 +163,7 @@ public partial class UnsortedTracksView : UserControl
     {
         if (DataContext is not UnsortedTracksViewModel vm)
             return;
-        var resolver = new ConflictsResolveWindow(vm.AutoTagger.Conflicts);
+        var resolver = new TaggingResultsWindow(vm.AutoTagger);
         var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         if (window == null)
             return;
